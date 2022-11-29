@@ -7,7 +7,7 @@ type MenuItemProps = {
   text: string;
   iconSrc: string;
   href: string;
-  isActive: boolean;
+  isActive?: boolean;
   isCollapsed: boolean;
 };
 
