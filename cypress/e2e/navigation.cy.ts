@@ -30,7 +30,7 @@ describe("Sidebar Navigation", () => {
 
       cy.get("nav")
         .contains("Settings")
-        .should("have.attr", "href", "/dashboard/settings");
+        .should("have.attr", "href", "/dashboard/settings")
 
       cy.get("nav")
         .contains("Support")
