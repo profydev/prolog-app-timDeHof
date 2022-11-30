@@ -1,5 +1,3 @@
-import cypress from "cypress";
-
 describe("Sidebar Navigation", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/dashboard");
@@ -31,7 +29,14 @@ describe("Sidebar Navigation", () => {
       cy.get("nav")
         .contains("Settings")
         .should("have.attr", "href", "/dashboard/settings");
-      cy.get("nav").contains("Support").url();
+
+      cy.get("nav")
+        .contains("Support")
+        .should(
+          "have.attr",
+          "href",
+          "mailto:support@prolog-app.com?subject=Support Request:"
+        );
     });
 
     it("is collapsible", () => {
