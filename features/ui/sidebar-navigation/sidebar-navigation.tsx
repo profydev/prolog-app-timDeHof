@@ -167,9 +167,11 @@ export function SidebarNavigation() {
         setShowMobileLogo(true);
       }
     };
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [showMobileLogo]);
+
 
   return (
     <Container isCollapsed={isSidebarCollapsed}>
