@@ -161,9 +161,9 @@ export function SidebarNavigation() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 1024) {
+      if (window.innerWidth >= 1024) {
         setShowMobileLogo(false);
-      } else if (window.innerWidth < 1024) {
+      } else {
         setShowMobileLogo(true);
       }
     };
@@ -171,7 +171,7 @@ export function SidebarNavigation() {
     console.log("window innerWidth:", window.innerWidth);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  });
+  }, []);
 
   return (
     <Container isCollapsed={isSidebarCollapsed}>
