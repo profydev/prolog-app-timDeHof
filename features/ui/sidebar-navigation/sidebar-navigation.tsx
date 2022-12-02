@@ -172,7 +172,6 @@ export function SidebarNavigation() {
     return () => window.removeEventListener("resize", handleResize);
   }, [showMobileLogo]);
 
-
   return (
     <Container isCollapsed={isSidebarCollapsed}>
       <FixedContainer>
