@@ -21,6 +21,8 @@ const statusColors = {
   [ProjectStatus.stable]: BadgeColor.success,
   [ProjectStatus.warning]: BadgeColor.warning,
   [ProjectStatus.critical]: BadgeColor.error,
+  [ProjectStatus.error]: BadgeColor.critical,
+  [ProjectStatus.info]: BadgeColor.success,
 };
 
 const Container = styled.div`
@@ -103,6 +105,8 @@ const ViewIssuesAnchor = styled(Link)`
 
 export function ProjectCard({ project }: ProjectCardProps) {
   const { name, language, numIssues, numEvents24h, status } = project;
+  console.log("status:", status);
+  console.log(statusColors[status]);
   return (
     <Container>
       <TopContainer>
@@ -123,7 +127,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
             <IssuesNumber>{numEvents24h}</IssuesNumber>
           </Issues>
           <Status>
-            <Badge color={statusColors[status]}>{capitalize(status)}</Badge>
+            <Badge color={statusColors[status]}>
+              {capitalize(statusColors[status])}
+            </Badge>
           </Status>
         </InfoContainer>
       </TopContainer>

@@ -11,9 +11,11 @@ export enum BadgeSize {
 export enum BadgeColor {
   primary = "primary",
   gray = "gray",
-  error = "error",
+  error = "critical",
+  critical = "critical",
   warning = "warning",
-  success = "success",
+  success = "stable",
+  info = "info",
 }
 
 type BadgeProps = {
@@ -57,6 +59,26 @@ const Container = styled.div<{ size: BadgeSize; color: BadgeColor }>`
         return css`
           background: ${color("gray", 100)};
           color: ${color("gray", 700)};
+        `;
+      case BadgeColor.critical:
+        return css`
+          background: ${color("error", 50)};
+          color: ${color("error", 700)};
+        `;
+      case BadgeColor.warning:
+        return css`
+          background: ${color("warning", 50)};
+          color: ${color("warning", 700)};
+        `;
+      case BadgeColor.success:
+        return css`
+          background: ${color("success", 50)};
+          color: ${color("success", 700)};
+        `;
+      case BadgeColor.info:
+        return css`
+          background: ${color("success", 50)};
+          color: ${color("success", 700)};
         `;
       default:
         return css`
