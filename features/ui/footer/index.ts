@@ -1,0 +1,1 @@
+export { FooterBar } from "./footer";
