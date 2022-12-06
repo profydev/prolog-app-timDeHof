@@ -43,12 +43,15 @@ export type Theme = {
   };
   size: {
     headerHeight: string;
+    footerHeight: string;
   };
   breakpoint: {
     desktop: string;
+    mobile: string;
   };
   zIndex: {
     header: number;
+    footer: number;
   };
   font: {
     text: {
@@ -148,12 +151,15 @@ export const theme = {
   },
   size: {
     headerHeight: "4rem",
+    footerHeight: "3.75rem",
   },
   breakpoint: {
     desktop: "64em",
+    mobile: "28.125em",
   },
   zIndex: {
     header: 1000,
+    footer: 1000,
   },
   font: {
     text: {

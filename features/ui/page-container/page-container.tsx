@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import styled from "styled-components";
-import { SidebarNavigation } from "@features/ui";
+import { SidebarNavigation, FooterBar } from "@features/ui";
 import { color, displayFont, textFont, space, breakpoint } from "@styles/theme";
 
 type PageContainerProps = {
@@ -17,10 +17,13 @@ const Container = styled.div`
 
   @media (min-width: ${breakpoint("desktop")}) {
     flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 `;
 
 const Main = styled.main`
+  position: relative;
   flex: 1;
 `;
 
@@ -72,6 +75,7 @@ export function PageContainer({ children, title, info }: PageContainerProps) {
           {children}
         </ContentContainer>
       </Main>
+      <FooterBar />
     </Container>
   );
 }
