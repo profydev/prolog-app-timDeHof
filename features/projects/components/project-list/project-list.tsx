@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { breakpoint, space } from "@styles/theme";
 import { ProjectCard } from "../project-card";
 import { useProjects } from "../../api/use-projects";
+import { Spinner, SpinnerColor, SpinnerSize } from "../../../ui/spinner";
 
 const List = styled.ul`
   display: grid;
@@ -22,7 +23,7 @@ export function ProjectList() {
   const { data, isLoading, isError, error } = useProjects();
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return <Spinner size={SpinnerSize.lg} color={SpinnerColor.primary} />;
   }
 
   if (isError) {
