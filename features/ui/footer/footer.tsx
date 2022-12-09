@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import styled, { css } from "styled-components";
-// import { Routes } from "@config/routes";
 import { FooterItemLink } from "./footer-item-link";
 import { breakpoint, color, space } from "@styles/theme";
 import { NavigationContext } from "./navigation-context";
-// import { version } from "../../../package.json";
+
 const footerItems = [
   { text: "Docs", href: "/#" },
   { text: "API", href: "/#" },
