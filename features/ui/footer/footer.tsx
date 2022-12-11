@@ -2,7 +2,7 @@ import { useContext } from "react";
 import styled, { css } from "styled-components";
 import { FooterItemLink } from "./footer-item-link";
 import { breakpoint, color, space } from "@styles/theme";
-import { NavigationContext } from "./navigation-context";
+import { NavigationContext } from "../sidebar-navigation/navigation-context";
 
 const footerItems = [
   { text: "Docs", href: "/#" },
