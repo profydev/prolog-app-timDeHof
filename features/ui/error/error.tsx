@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import styled, { css } from "styled-components";
 import { NavigationContext } from "../sidebar-navigation";
 import { ErrorItemButton } from "./error-item-button";
-import { useProjects } from "@features/projects";
 import { breakpoint, color, space, textFont } from "@styles/theme";
+import { useRouter } from "next/router";
 
 const containerStyles = css`
   display: flex;
@@ -59,20 +59,21 @@ const TryAgainItem = styled(ErrorItemButton)`
 `;
 
 export function Error() {
-  const { refetch } = useProjects();
-  const retry = () => refetch();
+  const router = useRouter();
   const { isSidebarCollapsed } = useContext(NavigationContext);
   return (
     <FixedContainer isCollapsed={isSidebarCollapsed}>
-      <ErrorContainer>
+      <ErrorContainer data-cy="errorContainer">
         <List>
           <ErrorLogo src={"/icons/error.svg"} alt="error-icon" />
-          <p>There was a problem while loading the project data</p>
+          <p data-cy="ErrorMsg">
+            There was a problem while loading the project data
+          </p>
         </List>
         <TryAgainItem
           text="Try Again"
           iconSrc="/icons/arrow-right.svg"
-          onClick={retry}
+          onClick={() => router.reload()}
         />
       </ErrorContainer>
     </FixedContainer>

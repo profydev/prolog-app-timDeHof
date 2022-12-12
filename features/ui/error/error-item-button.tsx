@@ -19,9 +19,10 @@ export function ErrorItemButton({
 }: ErrorItemProps) {
   return (
     <ListItem className={className}>
-      <Anchor as={Button} onClick={onClick}>
+      <Anchor data-cy="TryAgainButton" as={Button} onClick={onClick}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        {!isCollapsed && text} <Icon src={iconSrc} alt={`${text} icon`} />
+        {!isCollapsed && text}{" "}
+        <Icon data-cy="TryAgainImg" src={iconSrc} alt={`${text} icon`} />
       </Anchor>
     </ListItem>
   );
