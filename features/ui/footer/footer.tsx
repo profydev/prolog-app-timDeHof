@@ -93,7 +93,7 @@ const Version = styled.p`
     order: 3;
   }
 `;
-
+// create a footer component
 export function FooterBar() {
   const { isSidebarCollapsed } = useContext(NavigationContext);
   return (
