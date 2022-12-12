@@ -3,6 +3,7 @@ import { breakpoint, space } from "@styles/theme";
 import { ProjectCard } from "../project-card";
 import { useProjects } from "../../api/use-projects";
 import { Spinner, SpinnerColor, SpinnerSize } from "../../../ui/spinner";
+import { Error } from "../../../ui/error/error";
 
 const List = styled.ul`
   display: grid;
@@ -28,7 +29,8 @@ export function ProjectList() {
 
   if (isError) {
     console.error(error);
-    return <div>Error: {error.message}</div>;
+
+    return <Error />;
   }
 
   return (

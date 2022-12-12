@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useContext, useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { Routes } from "@config/routes";
-import { NavigationContext } from "../footer/navigation-context";
+import { NavigationContext } from "./navigation-context";
 import { MenuItemButton } from "./menu-item-button";
 import { MenuItemLink } from "./menu-item-link";
 import { Button } from "@features/ui";
