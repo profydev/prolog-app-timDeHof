@@ -96,7 +96,6 @@ const Version = styled.p`
 
 export function FooterBar() {
   const { isSidebarCollapsed } = useContext(NavigationContext);
-
   return (
     <FixedContainer isCollapsed={isSidebarCollapsed}>
       <Footer>
