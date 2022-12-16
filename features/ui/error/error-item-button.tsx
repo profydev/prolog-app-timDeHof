@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@features/ui";
+import { Button } from "@features/ui/button";
 import { ListItem, Anchor, Icon } from "./error-item-link";
 
 type ErrorItemProps = {
