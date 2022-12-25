@@ -1,4 +1,5 @@
 import React from "react";
+
 import Image from "next/image";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { CustomButton, ButtonSize, ButtonColor } from "./customButton";
