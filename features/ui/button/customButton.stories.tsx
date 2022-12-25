@@ -22,6 +22,7 @@ export default {
       defaultValue: "md",
       control: {
         type: "inline-radio",
+        options: ["sm", "md", "lg", "xl"],
       },
     },
     color: {
@@ -30,6 +31,14 @@ export default {
       defaultValue: "primary",
       control: {
         type: "inline-radio",
+        options: [
+          "primary",
+          "secondary",
+          "gray",
+          "empty",
+          "empty-gray",
+          "error",
+        ],
       },
     },
   },
