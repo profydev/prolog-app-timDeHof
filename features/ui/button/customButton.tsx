@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC, ButtonHTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 import { color, textFont, space } from "@styles/theme";
 import { Button } from "./button";
@@ -16,23 +16,15 @@ export enum ButtonColor {
   gray = "gray",
   empty = "empty",
   emptyGray = "empty-gray",
-  error = "critical",
-}
-
-export enum ButtonIcon {
-  leading = "leading",
-  trailing = "trailing",
-  only = "only",
+  error = "error",
 }
 
 type ButtonProps = {
-  children?: React.ReactNode;
+  children: JSX.Element | string;
   size: ButtonSize;
   color: ButtonColor;
   isDisabled: boolean;
-  icon: ButtonIcon;
-  onClick?: () => void;
-};
+} & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const ButtonContainer = styled(Button)<{
   size: ButtonSize;
@@ -40,7 +32,9 @@ const ButtonContainer = styled(Button)<{
   isDisabled: boolean;
 }>`
   border-radius: 8px;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
   ${(props) => {
     return css`
       cursor: ${props.isDisabled ? "not-allowed" : "pointer"};
@@ -51,30 +45,26 @@ const ButtonContainer = styled(Button)<{
     switch (props.size) {
       case ButtonSize.sm:
         return css`
-          padding: ${space(2, 3)};
-          width: ${space(24)} + ${space(2)};
-          height: ${space(8)} + ${space(1)};
+          padding: ${space(2)} 0.875rem;
+          ${textFont("sm", "medium")};
         `;
 
       case ButtonSize.md:
         return css`
-          padding: ${space(2, 4)};
-          width: ${space(24)} + ${space(3)};
-          height: ${space(10)};
+          padding: 0.625rem ${space(4)};
+          ${textFont("sm", "medium")};
         `;
 
       case ButtonSize.lg:
         return css`
-          padding: ${space(2, 4)};
-          width: ${space(24)} + ${space(5)} + ${space(2)};
-          height: ${space(10)} + ${space(1)};
+          padding: 0.625rem 1.125rem;
+          ${textFont("md", "medium")};
         `;
 
       case ButtonSize.xl:
         return css`
           padding: ${space(3, 5)};
-          width: ${space(24)} + ${space(8)};
-          height: ${space(12)};
+          ${textFont("md", "medium")};
         `;
     }
   }}
@@ -191,106 +181,21 @@ const ButtonContainer = styled(Button)<{
   }}
 `;
 
-const ContentContainer = styled.div<{ icon: ButtonIcon }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${space(1)};
-  ${(props) => {
-    switch (props.icon) {
-      case ButtonIcon.leading:
-        return css`
-          flex-direction: row;
-        `;
-      case ButtonIcon.trailing:
-        return css`
-          flex-direction: row-reverse;
-        `;
-    }
-  }}
-`;
-const Text = styled.h1<{ size: ButtonSize; icon: ButtonIcon }>`
-  margin: 0;
-  ${(props) => {
-    if (props.icon === ButtonIcon.only) {
-      return css`
-        display: none;
-      `;
-    }
-  }}
-  ${(props) => {
-    switch (props.size) {
-      case ButtonSize.sm:
-        return css`
-          ${textFont("sm", "medium")};
-        `;
-      case ButtonSize.md:
-        return css`
-          ${textFont("sm", "medium")};
-        `;
-      case ButtonSize.lg:
-        return css`
-          ${textFont("md", "medium")};
-        `;
-      case ButtonSize.xl:
-        return css`
-          ${textFont("md", "medium")};
-        `;
-    }
-  }}
-`;
-const Icon = styled.div<{ color: ButtonColor; isDisabled: boolean }>`
-  width: ${space(2)};
-  height: ${space(2)};
-  border: 1.67px solid #fff;
-  border-radius: 50%;
-
-  ${(props) => {
-    switch (props.color) {
-      case ButtonColor.secondary:
-        return css`
-          border-color: ${props.isDisabled
-            ? color("primary", 300)
-            : color("primary", 700)};
-        `;
-      case ButtonColor.gray:
-        return css`
-          border-color: ${props.isDisabled
-            ? color("gray", 300)
-            : color("gray", 700)};
-        `;
-      case ButtonColor.empty:
-        return css`
-          border-color: ${props.isDisabled
-            ? color("gray", 300)
-            : color("primary", 700)};
-        `;
-      case ButtonColor.emptyGray:
-        return css`
-          border-color: ${props.isDisabled
-            ? color("gray", 300)
-            : color("gray", 500)};
-        `;
-    }
-  }}
-`;
-
-export function CustomButton({
+export const CustomButton: FC<ButtonProps> = ({
   children,
-  onClick,
   isDisabled = false,
-  size = ButtonSize.md,
+  size,
   color = ButtonColor.primary,
-  icon = ButtonIcon.leading,
-}: ButtonProps) {
+  ...OtherProps
+}) => {
   return (
-    <ButtonContainer isDisabled={isDisabled} size={size} color={color}>
-      <ContentContainer onClick={onClick} icon={icon}>
-        <Icon color={color} isDisabled={isDisabled} />
-        <Text size={size} icon={icon}>
-          {children}
-        </Text>
-      </ContentContainer>
+    <ButtonContainer
+      isDisabled={isDisabled}
+      size={size}
+      color={color}
+      {...OtherProps}
+    >
+      {children}
     </ButtonContainer>
   );
-}
+};
