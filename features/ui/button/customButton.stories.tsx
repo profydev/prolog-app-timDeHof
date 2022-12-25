@@ -1,4 +1,5 @@
 import React from "react";
+
 import Image from "next/image";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { CustomButton, ButtonSize, ButtonColor } from "./customButton";
@@ -46,6 +47,7 @@ export default {
 const Template: ComponentStory<typeof CustomButton> = (args) => (
   <div style={{ display: "flex", gap: 16, padding: 32 }}>
     <CustomButton {...args} />
+
   </div>
 );
 
@@ -129,4 +131,5 @@ TrailingIcon.args = {
   isDisabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
+
 };

@@ -1,4 +1,6 @@
+
 import React, { FC, ButtonHTMLAttributes } from "react";
+
 import styled, { css } from "styled-components";
 import { color, textFont, space } from "@styles/theme";
 import { Button } from "./button";
@@ -26,15 +28,14 @@ type ButtonProps = {
   isDisabled: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
+
 const ButtonContainer = styled(Button)<{
   size: ButtonSize;
   color: ButtonColor;
   isDisabled: boolean;
 }>`
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+
   ${(props) => {
     return css`
       cursor: ${props.isDisabled ? "not-allowed" : "pointer"};
@@ -47,24 +48,29 @@ const ButtonContainer = styled(Button)<{
         return css`
           padding: ${space(2)} 0.875rem;
           ${textFont("sm", "medium")};
+
         `;
 
       case ButtonSize.md:
         return css`
+
           padding: 0.625rem ${space(4)};
           ${textFont("sm", "medium")};
         `;
 
       case ButtonSize.lg:
         return css`
+
           padding: 0.625rem 1.125rem;
           ${textFont("md", "medium")};
+
         `;
 
       case ButtonSize.xl:
         return css`
           padding: ${space(3, 5)};
           ${textFont("md", "medium")};
+
         `;
     }
   }}
@@ -181,6 +187,7 @@ const ButtonContainer = styled(Button)<{
   }}
 `;
 
+
 export const CustomButton: FC<ButtonProps> = ({
   children,
   isDisabled = false,
@@ -199,3 +206,4 @@ export const CustomButton: FC<ButtonProps> = ({
     </ButtonContainer>
   );
 };
+
