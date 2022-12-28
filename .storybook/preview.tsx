@@ -26,4 +26,5 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  layout: "centered",
 };
