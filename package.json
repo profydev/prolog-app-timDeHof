@@ -41,6 +41,7 @@
     "@storybook/manager-webpack5": "^6.5.13",
     "@storybook/react": "^6.5.13",
     "@storybook/testing-library": "^0.0.13",
+    "@svgr/webpack": "^6.5.1",
     "@types/jest": "^29.2.2",
     "@types/lodash": "^4.14.181",
     "@types/node": "^18.11.9",
