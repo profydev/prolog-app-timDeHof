@@ -2,11 +2,13 @@ import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 
+
 import {
   CheckboxGroup,
   CheckboxGroupProps,
   CheckboxSize,
 } from "./checkboxGroup";
+
 
 const onChange = action("onChange");
 export default {
@@ -43,7 +45,7 @@ Default.args = {
     { value: "option2", label: "Option 2" },
     { value: "option3", label: "Option 3" },
   ],
-  onChange: onChange,
+  onChange: onChange;
 };
 
 export const PartlyChecked = Template.bind({});
