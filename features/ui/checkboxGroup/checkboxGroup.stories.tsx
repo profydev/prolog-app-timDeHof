@@ -62,8 +62,7 @@ PartlyChecked.args = {
       ],
     },
   ],
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange: () => {},
+  onChange: onChange,
 };
 
 export const Disabled = Template.bind({});
@@ -76,8 +75,7 @@ Disabled.args = {
     { label: "Option 2", value: "value2" },
     { label: "Option 3", value: "value3" },
   ],
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange: () => {},
+  onChange: onChange,
 };
 
 export const Small = Template.bind({});
@@ -90,6 +88,5 @@ Small.args = {
     { label: "Option 2", value: "value2" },
     { label: "Option 3", value: "value3" },
   ],
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange: () => {},
+  onChange: onChange,
 };
