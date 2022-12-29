@@ -23,19 +23,16 @@ export type CheckboxProps = {
 
 const CheckboxContainer = styled.div<{ size: CheckboxSize }>`
   display: flex;
-  margin: 0.3rem;
   vertical-align: middle;
   ${(props) => {
     switch (props.size) {
       case CheckboxSize.sm:
         return css`
           ${textFont("sm", "medium")}
-          gap: 0.5rem;
         `;
       case CheckboxSize.md:
         return css`
           ${textFont("md", "medium")}
-          gap: 0.8rem;
         `;
     }
   }}
@@ -47,9 +44,9 @@ const Icon = styled.svg<{ disabled: boolean }>`
   fill: none;
   stroke: ${(props) =>
     props.disabled ? color("gray", 300) : color("primary", 700)};
-  stroke-width: "2";
-  stroke-linecap: "round";
-  stroke-linejoin: "round";
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   background-position: center;
 `;
 
@@ -160,12 +157,12 @@ const CheckboxText = styled.div<{ size: CheckboxSize; disabled: boolean }>`
       case CheckboxSize.sm:
         return css`
           ${textFont("sm", "medium")}
-          gap: 0.5rem;
+          margin-left: 0.5rem;
         `;
       case CheckboxSize.md:
         return css`
           ${textFont("md", "medium")}
-          gap: 0.8rem;
+          margin-left: 0.8rem;
         `;
     }
   }}
