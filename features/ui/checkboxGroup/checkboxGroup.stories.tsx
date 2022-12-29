@@ -1,5 +1,6 @@
 import React from "react";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 
 import {
   CheckboxGroup,
@@ -7,6 +8,7 @@ import {
   CheckboxSize,
 } from "./checkboxGroup";
 
+const onChange = action("onChange");
 export default {
   component: CheckboxGroup,
   title: "UI/checkbox/checkboxGroup",
@@ -29,7 +31,7 @@ export default {
 
 const Template: ComponentStory<typeof CheckboxGroup> = (
   args: CheckboxGroupProps
-) => <CheckboxGroup {...args} />;
+) => <CheckboxGroup {...args} onChange={onChange} />;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -41,8 +43,7 @@ Default.args = {
     { value: "option2", label: "Option 2" },
     { value: "option3", label: "Option 3" },
   ],
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  onChange: () => {},
+  onChange: onChange,
 };
 
 export const PartlyChecked = Template.bind({});
