@@ -19,28 +19,25 @@ export type CheckboxGroupProps = {
 
 const CheckboxGroupContainer = styled.div<{ size: CheckboxSize }>`
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
-  margin: 0.3rem;
+  margin: 1.3rem;
   vertical-align: middle;
   ${(props) => {
     switch (props.size) {
       case CheckboxSize.sm:
         return css`
           ${textFont("sm", "medium")}
-          gap: 0.5rem;
         `;
       case CheckboxSize.md:
         return css`
           ${textFont("md", "medium")}
-          gap: 0.8rem;
         `;
     }
   }}
 `;
 const CheckboxIndent = styled.div<{ size: CheckboxSize }>`
+  display: none;
   width: ${(props) => (props.size === CheckboxSize.sm ? "0.8rem" : "1rem")};
   height: ${(props) => (props.size === CheckboxSize.sm ? "0.8rem" : "1rem")};
 `;

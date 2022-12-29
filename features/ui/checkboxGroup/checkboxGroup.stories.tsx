@@ -22,7 +22,7 @@ export default {
       },
     },
     disabled: { control: "boolean" },
-    SelectedValues: { control: "array" },
+    selectedValues: { control: "array" },
     onChange: { action: "clicked" },
   },
 } as ComponentMeta<typeof CheckboxGroup>;
