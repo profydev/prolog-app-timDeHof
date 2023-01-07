@@ -1,134 +1,188 @@
-import React, { FC } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 import styled, { css } from "styled-components";
 import { color, textFont } from "@styles/theme";
 
 export type SelectProps = {
   options: string[];
-  onChange: (value: string) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   label: string;
-  value: string;
-  isFocused: boolean;
-  isDisabled: boolean;
-  isOpen: boolean;
+  defaultValue: string;
+  state: SelectionStates;
   hintText?: string;
+  hasIcon?: boolean;
 };
 
+export enum SelectionStates {
+  Empty = "empty",
+  Filled = "filled",
+  Focused = "focused",
+  Disabled = "disabled",
+  Open = "open",
+}
+
 const SelectContainer = styled.div`
-  display: inline-block;
   position: relative;
+  max-height: 400px;
   ${textFont("md", "regular")}
 `;
 
-const Selectlabel = styled.label`
+const SelectLabel = styled.label`
   display: block;
   margin-bottom: 8px;
   ${textFont("sm", "regular")}
   color: ${color("gray", 700)}
 `;
 
-const SelectStyled = styled.select<{
-  isFocused: boolean;
-  isDisabled: boolean;
-  isOpen: boolean;
-}>`
-  appearance: none;
-  width: 200px;
-  height: 40px;
-  padding: 10px;
-  border: 1px solid ${color("gray", 300)};
-  border-radius: 4px;
-  background-color: #fff;
-  cursor: pointer;
-
-  &:focus {
-    border-color: ${color("primary", 300)};
-    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0px 0px 0px 4px #f4ebff;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    pointer-events: none;
-    opacity: 0.5;
-  }
-
-  ${(props) =>
-    props.isOpen &&
-    css`
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    `}
-`;
-
-const Option = styled.option`
-  color: #333333;
-  background: white;
-  display: flex;
-  padding: 0px 2px 1px;
-`;
-
-const OptionsContainer = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  max-height: 200px;
-  overflow-y: auto;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  border-top: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-  ${(props) =>
-    !props.isOpen &&
-    css`
-      display: none;
-    `}
-`;
-
 const SelectHint = styled.div`
   position: absolute;
-  bottom: 100%;
+  top: 100%;
   left: 0;
   right: 0;
-  color: #999999;
-  font-size: 12px;
+  color: ${color("gray", 500)};
+  ${textFont("sm", "regular")}
+  order: 2;
 `;
 
+const SelectBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Selected = styled.div<{
+  state: SelectionStates;
+}>`
+  position: relative;
+  background-color: #fff;
+  border: 1px solid ${color("gray", 300)};
+  border-radius: 8px;
+  min-width: 320px;
+  padding: 10px 140px 10px 14px;
+  margin-bottom: 8px;
+  order: 0;
+
+  &:after {
+    content: "";
+    background: url("./icons/chevron-down.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: ${color("gray", 500)};
+
+    position: absolute;
+    height: 100%;
+    width: 10px;
+    right: 5%;
+    top: 2.5%;
+
+    transition: all 0.4s;
+  }
+  ${(props) => {
+    switch (props.state) {
+      case SelectionStates.Empty:
+        return css`
+          color: ${color("gray", 500)};
+          ${textFont("md", "regular")}
+        `;
+      case SelectionStates.Filled:
+        return css`
+          color: ${color("gray", 900)};
+        `;
+      case SelectionStates.Focused:
+        return css`
+          border: 1px solid ${color("primary", 300)};
+          box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
+            0px 0px 0px 4px #f4ebff;
+        `;
+      case SelectionStates.Open:
+        return css`
+          border: 1px solid ${color("primary", 300)};
+          box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
+            0px 0px 0px 4px #f4ebff;
+
+          &:after {
+            transform: rotate(180deg);
+          }
+        `;
+      case SelectionStates.Disabled:
+        return css`
+          pointer-events: none;
+          background-color: ${color("gray", 50)};
+          color: ${color("gray", 300)};
+        `;
+    }
+  }}
+`;
+
+const OptionsContainer = styled.div<{ state: SelectionStates }>`
+  max-height: ${(props) =>
+    props.state === SelectionStates.Open ? "320px" : "0px"};
+  order: 1;
+  opacity: ${(props) => (props.state === SelectionStates.Open ? "1" : "0")};
+  width: 100%;
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.1),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+`;
+
+const Option = styled.div`
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  &:hover {
+    background-color: ${color("primary", 200)};
+  }
+`;
+
+const Icon = styled.div`
+  width: 13px;
+  color: ${color("gray", 500)};
+  background: url("./icons/user.svg");
+  margin-right: 11px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
+const OptionRadio = styled.input.attrs({ type: "radio" })`
+  display: none;
+  position: relative;
+`;
+
+const OptionLabel = styled.label``;
 export const Select: FC<SelectProps> = ({
   options,
-  onChange,
+  state = SelectionStates.Empty,
+  defaultValue,
   label,
-  value,
-  isFocused,
-  isDisabled,
-  isOpen,
+  hasIcon,
   hintText,
 }) => {
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onChange(event.target.value);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSelectedValue(event.target.value);
   };
+  const [selectedValue, setSelectedValue] = useState(defaultValue);
 
   return (
     <SelectContainer>
-      <Selectlabel htmlFor={label}>{label}</Selectlabel>
-      <SelectStyled
-        onChange={handleChange}
-        value={value}
-        isFocused={isFocused}
-        isDisabled={isDisabled}
-        isOpen={isOpen}
-      >
-        <OptionsContainer isOpen={isOpen}>
+      <SelectLabel>{label}</SelectLabel>
+      <SelectBox>
+        <OptionsContainer state={state}>
           {options.map((option) => (
-            <Option key={option} value={option}>
-              {option}
+            <Option key={option}>
+              {hasIcon && <Icon />}
+              <OptionRadio
+                id={option}
+                name="option"
+                onChange={handleChange}
+                value={option}
+              />
+              <OptionLabel htmlFor={option}>{option}</OptionLabel>
             </Option>
           ))}
         </OptionsContainer>
-      </SelectStyled>
-      {hintText && <SelectHint>{hintText}</SelectHint>}
+        <Selected state={state}>{selectedValue}</Selected>
+        {hintText && <SelectHint>{hintText}</SelectHint>}
+      </SelectBox>
     </SelectContainer>
   );
 };
