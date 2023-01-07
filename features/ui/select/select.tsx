@@ -14,11 +14,11 @@ export type SelectProps = {
 };
 
 export enum SelectionStates {
+  Open = "open",
   Empty = "empty",
   Filled = "filled",
   Focused = "focused",
   Disabled = "disabled",
-  Open = "open",
 }
 
 const SelectContainer = styled.div`
