@@ -80,5 +80,4 @@ Opened.args = {
   state: SelectionStates.Open,
   hintText: "This is a hint text to help user.",
   selectedOption: "Candice Wu",
-
 };

@@ -1,4 +1,3 @@
-
 import React, { FC, useState } from "react";
 import styled, { css } from "styled-components";
 import { color, textFont } from "@styles/theme";
@@ -34,7 +33,6 @@ const SelectLabel = styled.label`
   ${textFont("sm", "regular")}
   color: ${color("gray", 700)}
 `;
-
 
 const SelectHint = styled.div<{ state: SelectionStates }>`
   display: ${(props) =>
@@ -175,11 +173,9 @@ export const Select: FC<SelectProps> = ({
     if (onChange) {
       onChange(option);
     }
-
   };
   return (
     <SelectContainer>
-
       <SelectLabel>{label}</SelectLabel>
       <SelectBox>
         <OptionsContainer state={selectionState}>
@@ -201,7 +197,6 @@ export const Select: FC<SelectProps> = ({
         </Selected>
         {hintText && <SelectHint state={selectionState}>{hintText}</SelectHint>}
       </SelectBox>
-
     </SelectContainer>
   );
 };
