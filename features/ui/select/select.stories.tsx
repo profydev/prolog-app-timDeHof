@@ -11,14 +11,14 @@ export default {
        It displays a number of options that are exposed to the user when they click on the component.
        At this moment we don’t use multi-select elements.`,
     actions: {
-      handles: ["change", ".radio"],
+      handles: ["click", ".radio"],
     },
   },
 } as ComponentMeta<typeof Select>;
 
 const Template: ComponentStory<typeof Select> = (args: SelectProps) => (
   <div>
-    <Select {...args} />
+    <Select {...args} onChange={action("onChange")} />
   </div>
 );
 
@@ -32,14 +32,52 @@ const options = [
   "Drew Cano",
 ];
 
-export const Default = Template.bind({});
-Default.args = {
+export const Empty = Template.bind({});
+Empty.args = {
   options: options,
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-    return action("onChange")(event.target.value);
-  },
   label: "Team member",
   defaultValue: "Select Team Member",
   state: SelectionStates.Empty,
   hintText: "This is a hint text to help user.",
+  selectedOption: "Select Team Member",
+};
+
+export const Filled = Template.bind({});
+Filled.args = {
+  options: options,
+  label: "Team member",
+  defaultValue: "Select Team Member",
+  state: SelectionStates.Filled,
+  hintText: "This is a hint text to help user.",
+  selectedOption: "Candice Wu",
+};
+
+export const Focused = Template.bind({});
+Focused.args = {
+  options: options,
+  label: "Team member",
+  defaultValue: "Select Team Member",
+  state: SelectionStates.Focused,
+  hintText: "This is a hint text to help user.",
+  selectedOption: "Candice Wu",
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  options: options,
+  label: "Team member",
+  defaultValue: "Select Team Member",
+  state: SelectionStates.Disabled,
+  hintText: "This is a hint text to help user.",
+  selectedOption: "Candice Wu",
+};
+
+export const Opened = Template.bind({});
+Opened.args = {
+  options: options,
+  label: "Team member",
+  defaultValue: "Select Team Member",
+  state: SelectionStates.Open,
+  hintText: "This is a hint text to help user.",
+  selectedOption: "Candice Wu",
 };

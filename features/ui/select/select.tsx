@@ -1,10 +1,11 @@
-import React, { ChangeEvent, FC, useState } from "react";
+import React, { FC, useState } from "react";
 import styled, { css } from "styled-components";
 import { color, textFont } from "@styles/theme";
 
 export type SelectProps = {
   options: string[];
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedOption: string;
+  onChange?: (selectedOption: string) => void;
   label: string;
   defaultValue: string;
   state: SelectionStates;
@@ -33,8 +34,9 @@ const SelectLabel = styled.label`
   color: ${color("gray", 700)}
 `;
 
-const SelectHint = styled.div`
-  position: absolute;
+const SelectHint = styled.div<{ state: SelectionStates }>`
+  display: ${(props) =>
+    props.state === SelectionStates.Open ? "none" : "block"};
   top: 100%;
   left: 0;
   right: 0;
@@ -48,9 +50,7 @@ const SelectBox = styled.div`
   flex-direction: column;
 `;
 
-const Selected = styled.div<{
-  state: SelectionStates;
-}>`
+const Selected = styled.div<{ state: SelectionStates }>`
   position: relative;
   background-color: #fff;
   border: 1px solid ${color("gray", 300)};
@@ -106,6 +106,7 @@ const Selected = styled.div<{
       case SelectionStates.Disabled:
         return css`
           pointer-events: none;
+          cursor: not-allowed;
           background-color: ${color("gray", 50)};
           color: ${color("gray", 300)};
         `;
@@ -149,39 +150,53 @@ const OptionRadio = styled.input.attrs({ type: "radio" })`
 `;
 
 const OptionLabel = styled.label``;
+
 export const Select: FC<SelectProps> = ({
   options,
-  state = SelectionStates.Empty,
-  defaultValue,
+  state,
   label,
   hasIcon,
   hintText,
+  selectedOption,
+  onChange,
 }) => {
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(event.target.value);
+  const [selectionState, setSelectionState] = useState(state);
+  const [selected, setSelected] = useState(selectedOption);
+
+  const openOptions = () => {
+    setSelectionState(SelectionStates.Open);
   };
-  const [selectedValue, setSelectedValue] = useState(defaultValue);
+
+  const selectOption = (option: string) => {
+    setSelected(option);
+    setSelectionState(SelectionStates.Focused);
+    if (onChange) {
+      onChange(option);
+    }
+  };
 
   return (
     <SelectContainer>
       <SelectLabel>{label}</SelectLabel>
       <SelectBox>
-        <OptionsContainer state={state}>
+        <OptionsContainer state={selectionState}>
           {options.map((option) => (
             <Option key={option}>
               {hasIcon && <Icon />}
               <OptionRadio
                 id={option}
                 name="option"
-                onChange={handleChange}
+                onClick={() => selectOption(option)}
                 value={option}
               />
               <OptionLabel htmlFor={option}>{option}</OptionLabel>
             </Option>
           ))}
         </OptionsContainer>
-        <Selected state={state}>{selectedValue}</Selected>
-        {hintText && <SelectHint>{hintText}</SelectHint>}
+        <Selected state={selectionState} onClick={openOptions} tabIndex={0}>
+          {selected}
+        </Selected>
+        {hintText && <SelectHint state={selectionState}>{hintText}</SelectHint>}
       </SelectBox>
     </SelectContainer>
   );
