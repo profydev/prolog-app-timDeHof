@@ -174,7 +174,6 @@ export const Select: FC<SelectProps> = ({
       onChange(option);
     }
   };
-
   return (
     <SelectContainer>
       <SelectLabel>{label}</SelectLabel>
