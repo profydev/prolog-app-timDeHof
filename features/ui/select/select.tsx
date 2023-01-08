@@ -3,14 +3,14 @@ import styled, { css } from "styled-components";
 import { color, textFont } from "@styles/theme";
 
 export type SelectProps = {
-  options: string[];
-  selectedOption: string;
-  onChange?: (selectedOption: string) => void;
-  label: string;
-  defaultValue: string;
-  state: SelectionStates;
+  label?: string;
   hintText?: string;
   hasIcon?: boolean;
+  options: string[];
+  defaultValue: string;
+  selectedOption: string;
+  state: SelectionStates;
+  onChange?: (selectedOption: string) => void;
 };
 
 export enum SelectionStates {
@@ -125,13 +125,12 @@ const OptionsContainer = styled.div<{ state: SelectionStates }>`
   border-radius: 8px;
 `;
 
-const Option = styled.div`
+const Option = styled.div<{ isChecked: boolean }>`
+  display: flex;
+  justify-content: flex-start;
   padding: 10px 14px;
   cursor: pointer;
-  display: flex;
-  &:hover {
-    background-color: ${color("primary", 200)};
-  }
+  ${(props) => props.isChecked && highlighted}
 `;
 
 const Icon = styled.div`
@@ -148,17 +147,33 @@ const OptionRadio = styled.input.attrs({ type: "radio" })`
   display: none;
   position: relative;
 `;
+const highlighted = css`
+  background-color: ${color("primary", 25)};
+  position: relative;
+  &:after {
+    content: "";
+    background: url("./icons/check.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 
+    position: absolute;
+    height: 100%;
+    width: 13px;
+    right: 5%;
+    top: 2.5%;
+  }
+`;
 const OptionLabel = styled.label``;
 
 export const Select: FC<SelectProps> = ({
-  options,
   state,
   label,
   hasIcon,
+  options,
   hintText,
-  selectedOption,
   onChange,
+  selectedOption,
 }) => {
   const [selectionState, setSelectionState] = useState(state);
   const [selected, setSelected] = useState(selectedOption);
@@ -180,7 +195,7 @@ export const Select: FC<SelectProps> = ({
       <SelectBox>
         <OptionsContainer state={selectionState}>
           {options.map((option) => (
-            <Option key={option}>
+            <Option key={option} isChecked={selected === option}>
               {hasIcon && <Icon />}
               <OptionRadio
                 id={option}
