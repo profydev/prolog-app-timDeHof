@@ -7,6 +7,7 @@ export type SelectProps = {
   hintText?: string;
   hasIcon?: boolean;
   options: string[];
+  setError?: boolean;
   defaultValue: string;
   selectedOption: string;
   state: SelectionStates;
@@ -34,13 +35,14 @@ const SelectLabel = styled.label`
   color: ${color("gray", 700)}
 `;
 
-const SelectHint = styled.div<{ state: SelectionStates }>`
+const SelectHint = styled.div<{ state: SelectionStates; setError?: boolean }>`
   display: ${(props) =>
     props.state === SelectionStates.Open ? "none" : "block"};
   top: 100%;
   left: 0;
   right: 0;
-  color: ${color("gray", 500)};
+  color: ${(props) =>
+    props.setError ? color("error", 300) : color("gray", 500)};
   ${textFont("sm", "regular")}
   order: 2;
 `;
@@ -50,10 +52,12 @@ const SelectBox = styled.div`
   flex-direction: column;
 `;
 
-const Selected = styled.div<{ state: SelectionStates }>`
+const Selected = styled.div<{ state: SelectionStates; setError?: boolean }>`
   position: relative;
   background-color: #fff;
-  border: 1px solid ${color("gray", 300)};
+  ${textFont("md", "regular")}
+  border: 1px solid
+${(props) => (props.setError ? color("error", 300) : color("gray", 300))};
   border-radius: 8px;
   min-width: 320px;
   padding: 10px 140px 10px 14px;
@@ -81,7 +85,6 @@ const Selected = styled.div<{ state: SelectionStates }>`
       case SelectionStates.Empty:
         return css`
           color: ${color("gray", 500)};
-          ${textFont("md", "regular")}
         `;
       case SelectionStates.Filled:
         return css`
@@ -89,15 +92,21 @@ const Selected = styled.div<{ state: SelectionStates }>`
         `;
       case SelectionStates.Focused:
         return css`
-          border: 1px solid ${color("primary", 300)};
+          border: 1px solid
+            ${props.setError ? color("error", 300) : color("primary", 300)};
           box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
-            0px 0px 0px 4px #f4ebff;
+            0px 0px 0px 4px ${props.setError ? "#FEE4E2" : "#f4ebff"};
         `;
       case SelectionStates.Open:
         return css`
-          border: 1px solid ${color("primary", 300)};
-          box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
-            0px 0px 0px 4px #f4ebff;
+          border: 1px solid
+            ${props.setError ? color("error", 300) : color("primary", 300)};
+          ${props.setError
+            ? ""
+            : css`
+                box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
+                  0px 0px 0px 4px #f4ebff;
+              `}
 
           &:after {
             transform: rotate(180deg);
@@ -172,6 +181,7 @@ export const Select: FC<SelectProps> = ({
   hasIcon,
   options,
   hintText,
+  setError,
   onChange,
   selectedOption,
 }) => {
@@ -207,10 +217,19 @@ export const Select: FC<SelectProps> = ({
             </Option>
           ))}
         </OptionsContainer>
-        <Selected state={selectionState} onClick={openOptions} tabIndex={0}>
+        <Selected
+          state={selectionState}
+          setError={setError}
+          onClick={openOptions}
+          tabIndex={0}
+        >
           {selected}
         </Selected>
-        {hintText && <SelectHint state={selectionState}>{hintText}</SelectHint>}
+        {hintText && (
+          <SelectHint state={selectionState} setError={setError}>
+            {setError ? "This is an error message" : hintText}
+          </SelectHint>
+        )}
       </SelectBox>
     </SelectContainer>
   );
