@@ -131,7 +131,6 @@ const Option = styled.div<{ isChecked: boolean }>`
   padding: 10px 14px;
   cursor: pointer;
   ${(props) => props.isChecked && highlighted}
-
 `;
 
 const Icon = styled.div`
@@ -167,8 +166,6 @@ const highlighted = css`
 `;
 const OptionLabel = styled.label``;
 
-const OptionLabel = styled.label``;
-
 export const Select: FC<SelectProps> = ({
   state,
   label,
@@ -198,16 +195,13 @@ export const Select: FC<SelectProps> = ({
       <SelectBox>
         <OptionsContainer state={selectionState}>
           {options.map((option) => (
-
             <Option key={option} isChecked={selected === option}>
-
               {hasIcon && <Icon />}
               <OptionRadio
                 id={option}
                 name="option"
                 onClick={() => selectOption(option)}
                 value={option}
-
               />
               <OptionLabel htmlFor={option}>{option}</OptionLabel>
             </Option>
