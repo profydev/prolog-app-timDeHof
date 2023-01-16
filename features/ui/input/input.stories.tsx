@@ -25,3 +25,46 @@ Empty.args = {
   iconSrc: "./icons/email.svg",
   state: InputStates.Empty,
 };
+
+export const filled = Template.bind({});
+filled.args = {
+  name: "email",
+  label: "Email",
+  hintText: "This is a hint text to help users",
+  type: "text",
+  iconSrc: "./icons/email.svg",
+  value: "johndoe@gmail.com",
+  state: InputStates.Filled,
+};
+
+export const Focused = Template.bind({});
+Focused.args = {
+  name: "email",
+  label: "Email",
+  hintText: "This is a hint text to help users",
+  type: "text",
+  iconSrc: "./icons/email.svg",
+  value: "johndoe@gmail.com",
+  state: InputStates.Focused,
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  name: "email",
+  label: "Email",
+  hintText: "This is a hint text to help users",
+  type: "text",
+  iconSrc: "./icons/email.svg",
+  state: InputStates.Disabled,
+};
+
+export const Error = Template.bind({});
+Error.args = {
+  name: "email",
+  label: "Email",
+  hintText: "This is a hint text to help users",
+  type: "text",
+  setError: true,
+  value: "johndoe@gmail.com",
+  state: InputStates.Focused,
+};

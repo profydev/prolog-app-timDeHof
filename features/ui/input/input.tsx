@@ -1,15 +1,19 @@
-import React, { FC, InputHTMLAttributes, useState, useEffect } from "react";
+import React, { FC, InputHTMLAttributes, useState } from "react";
 import styled, { css } from "styled-components";
 import { color, textFont } from "@styles/theme";
 
 export type InputProps = {
+  id: string;
   name: string;
-  label?: string;
-  hintText?: string;
   type: string;
+  label?: string;
   iconSrc?: string;
+  hintText?: string;
+  hasIcon?: boolean;
   state: InputStates;
   setError?: boolean;
+  inputValue?: string;
+  onChange?: (value: string) => void;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 export enum InputStates {
@@ -19,44 +23,54 @@ export enum InputStates {
   Disabled = "disabled",
 }
 
-const InputWrapper = styled.div`
-  ${textFont("md", "regular")}
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Label = styled.label`
   display: block;
-  margin-bottom: 8px;
-  ${textFont("sm", "regular")}
-  color: ${color("gray", 700)}
+  margin-bottom: 6px;
+  color: ${color("gray", 700)};
+  ${textFont("sm", "regular")};
 `;
 
-const InputIcon = styled.svg<{ iconSrc?: string }>`
-  background: url(${(props) => props.iconSrc});
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  color: ${color("gray", 500)};
-  width: 20px;
-  height: 20px;
-`;
-const InputContainer = styled.div<{
+const CustomInput = styled.input<{
+  iconSrc?: string;
+  hasIcon?: boolean;
   state: InputStates;
   setError?: boolean;
 }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid
-    ${(props) => (props.setError ? color("error", 300) : color("gray", 300))};
+  ${textFont("md", "regular")}
+  cursor: text;
   border-radius: 0.5rem;
   padding: 10px 14px;
+  min-width: 320px;
+  padding-left: ${(props) => (props.iconSrc ? "2.625rem" : "0.875rem")};
+  padding-right: ${(props) => (props.setError ? "2.375rem" : "0.875rem")};
   gap: 0.5rem;
+  background: ${(props) =>
+    props.iconSrc
+      ? `url(${props.iconSrc}) left 15.7px center no-repeat`
+      : props.setError
+      ? "url(/icons/error.svg) right 15.3px center no-repeat"
+      : "#FFF"};
+  border: 1px solid
+    ${(props) => (props.setError ? color("error", 300) : color("gray", 300))};
 
+  &:focus {
+    border: 1px solid
+      ${(props) =>
+        props.setError ? color("error", 300) : color("primary", 300)};
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
+      0px 0px 0px 4px ${(props) => (props.setError ? "#FEE4E2" : "#f4ebff")};
+  }
   ${(props) => {
     switch (props.state) {
       case InputStates.Empty:
         return css`
-          color: ${color("gray", 500)};
+          color: color("gray", 500);
         `;
       case InputStates.Filled:
         return css`
@@ -79,66 +93,56 @@ const InputContainer = styled.div<{
     }
   }}
 `;
-const CustomInput = styled.input`
-  background-color: #fff;
-  border: none;
-  ${textFont("md", "regular")}
-  cursor: text;
-  outline: none;
-`;
 
 const InputHint = styled.div<{ setError?: boolean }>`
   display: block;
+  margin-top: 6px;
   color: ${(props) =>
     props.setError ? color("error", 300) : color("gray", 500)};
   ${textFont("sm", "regular")};
 `;
 
 export const Input: FC<InputProps> = ({
+  id,
   name,
   label,
   hintText,
   type = "text",
+  hasIcon,
   iconSrc,
   setError,
+  inputValue = "",
+  state,
+  onFocus,
+  onChange,
   ...rest
 }) => {
-  const [state, setState] = useState(InputStates.Empty);
+  const [value, setValue] = useState(inputValue);
 
-  useEffect(() => {
-    function handleOnChange() {
-      if (rest.value) {
-        setState(InputStates.Filled);
-      } else {
-        setState(InputStates.Empty);
-      }
-    }
-    handleOnChange();
-  }, [rest.value]);
   return (
-    <InputWrapper>
-      <Label htmlFor={name}>{label}</Label>
-      <InputContainer state={state} setError={setError}>
-        <InputIcon iconSrc={iconSrc} />
-        <CustomInput
-          id={name}
-          type={type}
-          onClick={() => setState(InputStates.Focused)}
-          onBlur={(e) =>
-            setState(
-              e.target.value.length === 0
-                ? InputStates.Empty
-                : InputStates.Filled
-            )
-          }
-          {...rest}
-        />
-      </InputContainer>
+    <InputContainer>
+      {label && <Label htmlFor={name}>{label}</Label>}
+      <CustomInput
+        id={id}
+        name={name}
+        type={type}
+        setError={setError}
+        hasIcon={hasIcon}
+        iconSrc={iconSrc}
+        state={state}
+        value={value}
+        onFocus={() => (state = InputStates.Focused)}
+        onChange={(e) => {
+          setValue(e.target.value);
+          if (onChange) onChange(e.target.value);
+        }}
+        {...rest}
+      />
       {hintText && (
         <InputHint setError={setError}>
           {setError ? "This is an error message" : hintText}
         </InputHint>
       )}
-    </InputWrapper>
+    </InputContainer>
   );
 };
