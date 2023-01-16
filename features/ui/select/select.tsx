@@ -8,7 +8,6 @@ export type SelectProps = {
   hasIcon?: boolean;
   options: string[];
   setError?: boolean;
-
   defaultValue: string;
   selectedOption: string;
   state: SelectionStates;
