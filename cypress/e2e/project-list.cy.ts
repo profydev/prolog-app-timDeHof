@@ -38,7 +38,7 @@ describe("Project List", () => {
             .should(
               "have.attr",
               "href",
-              "/dashboard/issues?projectId=6d5fff43-d691-445d-a41a-7d0c639080e6&page=1"
+              `/dashboard/issues?projectId=${mockProjects[index].id}&page=1`
             );
         });
     });
