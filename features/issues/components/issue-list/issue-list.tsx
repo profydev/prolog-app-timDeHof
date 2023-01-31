@@ -64,15 +64,15 @@ const PageNumber = styled.span`
 
 export function IssueList() {
   const router = useRouter();
-  const projectId = String(router.query.projectId || null);
+  const projectId = String(router.query.projectId) || undefined;
   const page = Number(router.query.page || 1);
   const navigateToPage = (newPage: number) =>
     router.push({
       pathname: router.pathname,
       query: { page: newPage, projectId: projectId },
     });
-
-  const issuesPage = useGetIssues(page, projectId);
+  const per_page = 10;
+  const issuesPage = useGetIssues(page, per_page, projectId);
 
   const projects = useProjects();
 
@@ -98,7 +98,7 @@ export function IssueList() {
     {} as Record<string, ProjectLanguage>
   );
   const { items, meta } = issuesPage.data || {};
-  console.log("meta:", meta);
+
   return (
     <Container>
       <Table>

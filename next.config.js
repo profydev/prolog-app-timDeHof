@@ -4,9 +4,6 @@
 const packageJson = require("./package.json");
 
 const nextConfig = {
-  async routes() {
-    return [{ page: "/issues", pattern: "/issues/:projectId" }];
-  },
   reactStrictMode: true,
   compiler: {
     styledComponents: true,

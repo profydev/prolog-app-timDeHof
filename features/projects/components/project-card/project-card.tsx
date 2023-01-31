@@ -104,11 +104,10 @@ const ViewIssuesAnchor = styled(Link)`
 `;
 
 export function ProjectCard({ project }: ProjectCardProps) {
-  console.log(project);
   const { name, language, numIssues, numEvents24h, status } = project;
 
   return (
-    <Container>
+    <Container data-cy="projectCard" data-projectid={project.id}>
       <TopContainer>
         <NameAndIconContainer>
           <LanguageIcon src={`/icons/${language}.svg`} alt={language} />
@@ -135,6 +134,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </TopContainer>
       <BottomContainer>
         <ViewIssuesAnchor
+          date-cy="projectIssues"
           href={`${Routes.issues}?projectId=${project.id}&page=1`}
         >
           View issues
