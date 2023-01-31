@@ -1,6 +1,7 @@
 import mockIssues1 from "../fixtures/issues-page-1.json";
 import mockIssues2 from "../fixtures/issues-page-2.json";
 import mockIssues3 from "../fixtures/issues-page-3.json";
+import projects from "../fixtures/projects.json";
 
 describe("Issue List", () => {
   beforeEach(() => {
@@ -8,15 +9,27 @@ describe("Issue List", () => {
     cy.intercept("GET", "https://prolog-api.profy.dev/project", {
       fixture: "projects.json",
     }).as("getProjects");
-    cy.intercept("GET", "https://prolog-api.profy.dev/issue?page=1", {
-      fixture: "issues-page-1.json",
-    }).as("getIssuesPage1");
-    cy.intercept("GET", "https://prolog-api.profy.dev/issue?page=2", {
-      fixture: "issues-page-2.json",
-    }).as("getIssuesPage2");
-    cy.intercept("GET", "https://prolog-api.profy.dev/issue?page=3", {
-      fixture: "issues-page-3.json",
-    }).as("getIssuesPage3");
+    cy.intercept(
+      "GET",
+      "https://prolog-api.profy.dev/issue?page=1&projectId=undefined&limit=10",
+      {
+        fixture: "issues-page-1.json",
+      }
+    ).as("getIssuesPage1");
+    cy.intercept(
+      "GET",
+      "https://prolog-api.profy.dev/issue?page=2&projectId=undefined&limit=10",
+      {
+        fixture: "issues-page-2.json",
+      }
+    ).as("getIssuesPage2");
+    cy.intercept(
+      "GET",
+      "https://prolog-api.profy.dev/issue?page=3&projectId=undefined&limit=10",
+      {
+        fixture: "issues-page-3.json",
+      }
+    ).as("getIssuesPage3");
 
     // open issues page
     cy.visit(`http://localhost:3000/dashboard/issues`);
@@ -76,12 +89,33 @@ describe("Issue List", () => {
 
     it("persists page after reload", () => {
       cy.get("@next-button").click();
+      cy.wait(500);
       cy.contains("Page 2 of 3");
 
       cy.reload();
       cy.wait(["@getProjects", "@getIssuesPage2"]);
-      cy.wait(2000);
+      cy.wait(10000);
       cy.contains("Page 2 of 3");
+    });
+
+    it("renders project card with a link to the issue page with correct project id", () => {
+      // Visit the main dashboard page
+      cy.visit(`http://localhost:3000/dashboard`);
+
+      // Wait for the project cards to load
+      cy.wait("@getProjects");
+      cy.wait(2000);
+
+      cy.get('[data-cy="projectCard"]').each(($projectCard, index) => {
+        const projectCard = projects[index];
+        const projectId = projectCard.id;
+        // find the project card link and checks it
+        cy.wrap($projectCard)
+          .find("a")
+          .contains("View issues")
+          .should("have.attr", "href")
+          .should("include", `projectId=${projectId}`);
+      });
     });
   });
 });

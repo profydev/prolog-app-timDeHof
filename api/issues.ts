@@ -6,12 +6,19 @@ const ENDPOINT = "/issue";
 
 export async function getIssues(
   page: number,
+  limit: number,
+  projectId?: string | undefined,
   options?: { signal?: AbortSignal }
 ) {
   const { data } = await axios.get<Page<Issue>>(ENDPOINT, {
-    params: { page },
+    params: projectId !== null ? { page, projectId, limit } : { page, limit },
     signal: options?.signal,
   });
+  if (projectId === "undefined") {
+    return data;
+  } else {
+    data.items = data.items.filter((item) => item.projectId === projectId);
+  }
   return data;
 }
 
