@@ -63,7 +63,7 @@ describe("checking for Loading Spinner", () => {
       .then(() => {
         // wait for request to resolve
         cy.wait("@getProjects");
-        cy.get('[data-cy="spinner"]').should("not.exist");
+        cy.getByData("spinner").should("not.exist");
         cy.get("a").contains("View issues");
       });
   });
@@ -85,10 +85,10 @@ describe("check for Error component", () => {
     cy.wait("@getNetworkFailure");
     cy.wait(10000);
     // checks if the error message appears
-    cy.get('[data-cy="errorContainer"]').should("be.visible");
+    cy.getByData("errorContainer").should("be.visible");
     cy.contains(ErrorMsg).should("be.visible");
     // check if the correct img exists
-    cy.get('[data-cy="TryAgainImg"]').should(
+    cy.getByData("TryAgainImg").should(
       "have.attr",
       "src",
       "/icons/arrow-right.svg"
