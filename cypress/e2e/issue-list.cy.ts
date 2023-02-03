@@ -1,6 +1,7 @@
 import mockIssues1 from "../fixtures/issues-page-1.json";
 import mockIssues2 from "../fixtures/issues-page-2.json";
 import mockIssues3 from "../fixtures/issues-page-3.json";
+import projects from "../fixtures/projects.json";
 
 describe("Issue List", () => {
   beforeEach(() => {
@@ -95,6 +96,26 @@ describe("Issue List", () => {
       cy.wait(["@getProjects", "@getIssuesPage2"]);
       cy.wait(10000);
       cy.contains("Page 2 of 3");
+    });
+
+    it("renders project card with a link to the issue page with correct project id", () => {
+      // Visit the main dashboard page
+      cy.visit(`http://localhost:3000/dashboard`);
+
+      // Wait for the project cards to load
+      cy.wait("@getProjects");
+      cy.wait(2000);
+
+      cy.get('[data-cy="projectCard"]').each(($projectCard, index) => {
+        const projectCard = projects[index];
+        const projectId = projectCard.id;
+        // find the project card link and checks it
+        cy.wrap($projectCard)
+          .find("a")
+          .contains("View issues")
+          .should("have.attr", "href")
+          .should("include", `projectId=${projectId}`);
+      });
     });
   });
 });
