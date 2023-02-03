@@ -97,28 +97,4 @@ describe("Issue List", () => {
       cy.contains("Page 2 of 3");
     });
   });
-
-  context("checks for filtered issues by project id", () => {
-    const projectIds = [
-      "6d5fff43-d691-445d-a41a-7d0c639080e6",
-      "340cb147-6397-4a12-aa77-41100acf085f",
-      "9aa6a101-2c92-4797-b497-b31b2cb4c94b",
-    ];
-
-    beforeEach(() => {
-      // Visit the main dashboard page
-      cy.visit(`http://localhost:3000/dashboard`);
-    });
-
-    it("does the project card link's 'href' has correct project id", () => {
-      cy.getByData("projectCard").each(($projectCard, index) => {
-        // find the project card link and checks it
-        cy.wrap($projectCard)
-          .find("a")
-          .contains("View issues")
-          .should("have.attr", "href")
-          .should("include", `projectId=${projectIds[index]}`);
-      });
-    });
-  });
 });

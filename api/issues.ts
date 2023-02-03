@@ -14,7 +14,7 @@ export async function getIssues(
     params: projectId !== null ? { page, projectId, limit } : { page, limit },
     signal: options?.signal,
   });
-  if (projectId === "undefined") {
+  if (projectId === undefined) {
     return data;
   } else {
     data.items = data.items.filter((item) => item.projectId === projectId);
