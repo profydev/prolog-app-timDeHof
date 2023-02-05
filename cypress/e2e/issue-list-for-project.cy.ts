@@ -13,21 +13,21 @@ describe("filtered issue list", () => {
     }).as("getProjects");
     cy.intercept(
       "GET",
-      `https://prolog-api.profy.dev/issue?page=1&projectId=${projectId}&limit=10`,
+      `https://prolog-api.profy.dev/issue?page=1&projectId=${projectId}`,
       {
         fixture: "issues-for-project-page-1.json",
       }
     ).as("getProjectIssuesPage1");
     cy.intercept(
       "GET",
-      `https://prolog-api.profy.dev/issue?page=2&projectId=${projectId}&limit=10`,
+      `https://prolog-api.profy.dev/issue?page=2&projectId=${projectId}`,
       {
         fixture: "issues-for-project-page-2.json",
       }
     ).as("getProjectIssuesPage2");
     cy.intercept(
       "GET",
-      `https://prolog-api.profy.dev/issue?page=3&projectId=${projectId}&limit=10`,
+      `https://prolog-api.profy.dev/issue?page=3&projectId=${projectId}`,
       {
         fixture: "issues-for-project-page-3.json",
       }
