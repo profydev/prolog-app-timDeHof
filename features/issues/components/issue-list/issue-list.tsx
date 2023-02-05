@@ -64,16 +64,17 @@ const PageNumber = styled.span`
 
 export function IssueList() {
   const router = useRouter();
-  const projectId = String(router.query.projectId) || undefined;
+  const projectId = router.query.projectId as string;
   const page = Number(router.query.page || 1);
   const navigateToPage = (newPage: number) =>
     router.push({
       pathname: router.pathname,
       query: { page: newPage, projectId: projectId },
     });
-  const per_page = 10;
-  const issuesPage = useGetIssues(page, per_page, projectId);
-
+  // console.log("page:", page);
+  // const per_page = 10;
+  const issuesPage = useGetIssues(page, projectId);
+  // console.log("issuesPage:", issuesPage);
   const projects = useProjects();
 
   if (projects.isLoading || issuesPage.isLoading) {
