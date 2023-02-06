@@ -22,7 +22,6 @@ describe("Project List", () => {
     it("renders the projects", () => {
       const languageNames = ["React", "Node.js", "Python"];
       const statusName = ["critical", "warning", "stable"];
-
       // get all project cards
       cy.get("main")
         .find("li")
@@ -33,12 +32,15 @@ describe("Project List", () => {
           cy.wrap($el).contains(mockProjects[index].numIssues);
           cy.wrap($el).contains(mockProjects[index].numEvents24h);
           cy.wrap($el).contains(capitalize(statusName[index]));
+          console.log(JSON.stringify(mockProjects[0].name).replace(" ", "%20"));
           cy.wrap($el)
             .find("a")
             .should(
               "have.attr",
               "href",
-              `/dashboard/issues?projectId=${mockProjects[index].id}&page=1`
+              `/dashboard/issues?project=${encodeURIComponent(
+                mockProjects[index].name
+              )}&page=1`
             );
         });
     });

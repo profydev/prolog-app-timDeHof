@@ -4,43 +4,28 @@ import mockProjectIssues2 from "../fixtures/issues-for-project-page-2.json";
 import mockProjectIssues3 from "../fixtures/issues-for-project-page-3.json";
 
 describe("filtered issue list", () => {
-  const projectId = "6d5fff43-d691-445d-a41a-7d0c639080e6";
-
   beforeEach(() => {
     // setup request mocks
     cy.intercept("GET", "https://prolog-api.profy.dev/project", {
       fixture: "projects.json",
     }).as("getProjects");
-    cy.intercept(
-      "GET",
-      `https://prolog-api.profy.dev/issue?page=1&projectId=${projectId}`,
-      {
-        fixture: "issues-for-project-page-1.json",
-      }
-    ).as("getProjectIssuesPage1");
-    cy.intercept(
-      "GET",
-      `https://prolog-api.profy.dev/issue?page=2&projectId=${projectId}`,
-      {
-        fixture: "issues-for-project-page-2.json",
-      }
-    ).as("getProjectIssuesPage2");
-    cy.intercept(
-      "GET",
-      `https://prolog-api.profy.dev/issue?page=3&projectId=${projectId}`,
-      {
-        fixture: "issues-for-project-page-3.json",
-      }
-    ).as("getProjectIssuesPage3");
+
+    cy.intercept("GET", `https://prolog-api.profy.dev/issue?page=1`, {
+      fixture: "issues-for-project-page-1.json",
+    }).as("getProjectIssuesPage1");
+    cy.intercept("GET", `https://prolog-api.profy.dev/issue?page=2`, {
+      fixture: "issues-for-project-page-2.json",
+    }).as("getProjectIssuesPage2");
+    cy.intercept("GET", `https://prolog-api.profy.dev/issue?page=3`, {
+      fixture: "issues-for-project-page-3.json",
+    }).as("getProjectIssuesPage3");
 
     // open issues page
-    cy.visit(
-      `http://localhost:3000/dashboard/issues?projectId=${projectId}&page=1`
-    );
+    cy.visit(`http://localhost:3000/dashboard/issues?page=1`);
 
     // wait for request to resolve
     cy.wait(["@getProjects", "@getProjectIssuesPage1"]);
-    cy.wait(500);
+    cy.wait(1000);
 
     // set button aliases
     cy.get("button").contains("Previous").as("prev-button");
@@ -106,25 +91,20 @@ describe("filtered issue list", () => {
 
     it("checks for the correct number of issues per page", () => {
       // test the first page
-      cy.visit(
-        `http://localhost:3000/dashboard/issues?projectId=${projectId}&page=1`
-      );
+      cy.visit(`http://localhost:3000/dashboard/issues?page=1`);
       cy.wait("@getProjectIssuesPage1");
       cy.contains("Page 1 of 3");
       cy.get("main").find("tbody").find("tr").should("have.length", 9);
 
       // test the second page
-      cy.visit(
-        `http://localhost:3000/dashboard/issues?projectId=${projectId}&page=2`
-      );
+      cy.visit(`http://localhost:3000/dashboard/issues?page=2`);
       cy.wait("@getProjectIssuesPage2");
       cy.contains("Page 2 of 3");
       cy.get("main").find("tbody").find("tr").should("have.length", 6);
 
       // test the third and final page
-      cy.visit(
-        `http://localhost:3000/dashboard/issues?projectId=${projectId}&page=3`
-      );
+
+      cy.visit(`http://localhost:3000/dashboard/issues?page=3`);
       cy.wait("@getProjectIssuesPage3");
       cy.contains("Page 3 of 3");
       cy.get("main").find("tbody").find("tr").should("have.length", 7);
