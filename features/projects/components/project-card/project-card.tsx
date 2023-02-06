@@ -135,7 +135,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <BottomContainer>
         <ViewIssuesAnchor
           date-cy="projectIssues"
-          href={`${Routes.issues}?projectId=${project.id}&page=1`}
+          href={`${Routes.issues}?project=${project.name}&page=1`}
         >
           View issues
         </ViewIssuesAnchor>
