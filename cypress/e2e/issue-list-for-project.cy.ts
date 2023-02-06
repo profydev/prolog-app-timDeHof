@@ -4,9 +4,6 @@ import mockProjectIssues2 from "../fixtures/issues-for-project-page-2.json";
 import mockProjectIssues3 from "../fixtures/issues-for-project-page-3.json";
 
 describe("filtered issue list", () => {
-
-  const project = "Frontend - Web";
-
   beforeEach(() => {
     // setup request mocks
     cy.intercept("GET", "https://prolog-api.profy.dev/project", {
