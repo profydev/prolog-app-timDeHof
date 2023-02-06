@@ -4,6 +4,7 @@ import mockProjectIssues2 from "../fixtures/issues-for-project-page-2.json";
 import mockProjectIssues3 from "../fixtures/issues-for-project-page-3.json";
 
 describe("filtered issue list", () => {
+
   const project = "Frontend - Web";
 
   beforeEach(() => {
@@ -11,6 +12,7 @@ describe("filtered issue list", () => {
     cy.intercept("GET", "https://prolog-api.profy.dev/project", {
       fixture: "projects.json",
     }).as("getProjects");
+
     cy.intercept("GET", `https://prolog-api.profy.dev/issue?page=1`, {
       fixture: "issues-for-project-page-1.json",
     }).as("getProjectIssuesPage1");
@@ -104,6 +106,7 @@ describe("filtered issue list", () => {
       cy.get("main").find("tbody").find("tr").should("have.length", 6);
 
       // test the third and final page
+
       cy.visit(`http://localhost:3000/dashboard/issues?page=3`);
       cy.wait("@getProjectIssuesPage3");
       cy.contains("Page 3 of 3");

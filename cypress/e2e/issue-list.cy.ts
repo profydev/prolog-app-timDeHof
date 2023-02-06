@@ -65,6 +65,7 @@ describe("Issue List", () => {
       cy.get("@next-button").click();
       cy.get("@next-button").should("have.attr", "disabled");
       cy.contains("Page 3 of 3");
+      console.log(mockIssues3);
       cy.get("tbody tr:first").contains(mockIssues3.items[0].message);
 
       // test navigation back to second page

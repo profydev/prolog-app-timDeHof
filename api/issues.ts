@@ -13,6 +13,7 @@ export async function getIssues(
     params: project ? { page, project } : { page },
     signal: options?.signal,
   });
+
   return data;
 }
 

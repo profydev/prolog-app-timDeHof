@@ -64,6 +64,7 @@ const PageNumber = styled.span`
 
 export function IssueList() {
   const router = useRouter();
+
   const project = router.query.project as string;
   const page = Number(router.query.page || 1);
   const navigateToPage = (newPage: number) =>
@@ -74,6 +75,7 @@ export function IssueList() {
   // console.log("page:", page);
   // const per_page = 10;
   const issuesPage = useGetIssues(page, project);
+
   // console.log("issuesPage:", issuesPage);
   const projects = useProjects();
 
