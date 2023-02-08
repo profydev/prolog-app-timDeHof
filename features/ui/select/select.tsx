@@ -280,14 +280,18 @@ export const Select = ({
           }}
         >
           {placeholder && !selectedOption && (
-            <option value={selectedOption} disabled>
+            <option value="" disabled selected>
               {placeholder}
             </option>
           )}
           {options.map((option) => {
             const lowerCasedOption = option.toLocaleLowerCase();
             return (
-              <SelectOption value={lowerCasedOption} key={lowerCasedOption}>
+              <SelectOption
+                value={lowerCasedOption}
+                key={lowerCasedOption}
+                selected={option === selectedOption}
+              >
                 {titleCase(lowerCasedOption)}
               </SelectOption>
             );
