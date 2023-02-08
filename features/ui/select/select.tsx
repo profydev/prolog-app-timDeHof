@@ -1,236 +1,362 @@
-import React, { FC, useState } from "react";
+import React, {
+  InputHTMLAttributes,
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+} from "react";
 import styled, { css } from "styled-components";
 import { color, textFont } from "@styles/theme";
 
 export type SelectProps = {
+  id: string;
+  name: string;
+  value?: string;
   label?: string;
-  hintText?: string;
-  hasIcon?: boolean;
+  placeholder: string;
   options: string[];
-  setError?: boolean;
-  defaultValue: string;
-  selectedOption: string;
-  state: SelectionStates;
+  disabled?: boolean;
+  hintText?: string;
+  error?: string;
+  icon?: string;
   onChange?: (selectedOption: string) => void;
-};
+} & InputHTMLAttributes<HTMLSelectElement>;
 
-export enum SelectionStates {
-  Open = "open",
-  Empty = "empty",
-  Filled = "filled",
-  Focused = "focused",
-  Disabled = "disabled",
-}
-
+const SelectGroupContainer = styled.div``;
 const SelectContainer = styled.div`
   position: relative;
-  max-height: 400px;
-  ${textFont("md", "regular")}
-`;
+  min-width: 160px;
 
-const SelectLabel = styled.label`
-  display: block;
-  margin-bottom: 8px;
-  ${textFont("sm", "regular")}
-  color: ${color("gray", 700)}
-`;
-
-const SelectHint = styled.div<{ state: SelectionStates; setError?: boolean }>`
-  display: ${(props) =>
-    props.state === SelectionStates.Open ? "none" : "block"};
-  top: 100%;
-  left: 0;
-  right: 0;
-  color: ${(props) =>
-    props.setError ? color("error", 300) : color("gray", 500)};
-  ${textFont("sm", "regular")}
-  order: 2;
-`;
-
-const SelectBox = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Selected = styled.div<{ state: SelectionStates; setError?: boolean }>`
-  position: relative;
-  background-color: #fff;
-  ${textFont("md", "regular")}
-  border: 1px solid
-${(props) => (props.setError ? color("error", 300) : color("gray", 300))};
-  border-radius: 8px;
-  min-width: 320px;
-  padding: 10px 140px 10px 14px;
-  margin-bottom: 8px;
-  order: 0;
-
-  &:after {
-    content: "";
-    background: url("./icons/chevron-down.svg");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    color: ${color("gray", 500)};
-
-    position: absolute;
-    height: 100%;
-    width: 10px;
-    right: 5%;
-    top: 2.5%;
-
-    transition: all 0.4s;
-  }
-  ${(props) => {
-    switch (props.state) {
-      case SelectionStates.Empty:
-        return css`
-          color: ${color("gray", 500)};
-        `;
-      case SelectionStates.Filled:
-        return css`
-          color: ${color("gray", 900)};
-        `;
-      case SelectionStates.Focused:
-        return css`
-          border: 1px solid
-            ${props.setError ? color("error", 300) : color("primary", 300)};
-          box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
-            0px 0px 0px 4px ${props.setError ? "#FEE4E2" : "#f4ebff"};
-        `;
-      case SelectionStates.Open:
-        return css`
-          border: 1px solid
-            ${props.setError ? color("error", 300) : color("primary", 300)};
-          ${props.setError
-            ? ""
-            : css`
-                box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05),
-                  0px 0px 0px 4px #f4ebff;
-              `}
-
-          &:after {
-            transform: rotate(180deg);
-          }
-        `;
-      case SelectionStates.Disabled:
-        return css`
-          pointer-events: none;
-          cursor: not-allowed;
-          background-color: ${color("gray", 50)};
-          color: ${color("gray", 300)};
-        `;
+  @media (hover: hover) {
+    & > select:focus + div {
+      display: none;
     }
-  }}
+  }
+  & * {
+    box-sizing: border-box;
+  }
+`;
+const SelectLabel = styled.label`
+  ${textFont("sm", "medium")}
+  color: ${color("gray", 700)};
+  display: block;
+  margin-bottom: 6px;
 `;
 
-const OptionsContainer = styled.div<{ state: SelectionStates }>`
-  max-height: ${(props) =>
-    props.state === SelectionStates.Open ? "320px" : "0px"};
-  order: 1;
-  opacity: ${(props) => (props.state === SelectionStates.Open ? "1" : "0")};
+const NativeSelect = styled.select<{
+  error: string;
+}>`
+  // remove default styles
+  appearance: none;
+  display: none;
+  background-color: transparent;
+  border: none;
+  padding: 0 1em 0 0;
+  margin: 0;
   width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: 1.5;
+  outline: none;
+
+  width: 100%;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  display: grid;
+
+  :disabled {
+    color: $color("gray", 500);
+    background-color: ${color("gray", 50)};
+  }
+
+  :invalid {
+    color: ${color("gray", 500)};
+  }
+
+  ${(props) =>
+    css`
+      border: 1px solid
+        ${props.error ? color("error", 300) : color("gray", 300)};
+    `}
+
+  :focus {
+    ${(props) =>
+      css`
+        border-color: 1px solid
+          ${props.error ? color("error", 300) : color("gray", 300)};
+        outline: 4px solid
+          ${props.error ? color("error", 100) : color("primary", 100)};
+      `}
+  }
+`;
+
+const SelectOption = styled.option`
+  z-index: 99;
+`;
+
+const SelectHint = styled.span`
+  ${textFont("sm", "regular")};
+  color: ${color("gray", 500)};
+  display: block;
+  margin-top: 6px;
+`;
+
+const SelectError = styled.span`
+  ${textFont("sm", "regular")};
+  color: ${color("error", 500)};
+  display: block;
+  margin-top: 6px;
+`;
+
+const CustomSelect = styled.div<{
+  error: string;
+  disabled: boolean;
+  icon: string;
+}>`
+  ${textFont("md", "medium")}
+  z-index: 100;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+
+  width: 100%;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #fff;
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  display: flex;
+  justify-content: space-between;
+  ${(props) => {
+    if (props.icon)
+      return css`
+        background: url(${props.icon}) no-repeat left 17.3px center #fff;
+      `;
+  }}
+  ${(props) =>
+    css`
+      color: ${props.disabled ? color("gray", 500) : color("gray", 900)};
+      background-color: ${props.disabled ? color("gray", 50) : "white"};
+    `};
+  ${(props) =>
+    css`
+      border: 1px solid
+        ${props.error ? color("error", 300) : color("gray", 300)};
+    `};
+  @media (hover: none) {
+    *:hover {
+      display: block;
+    }
+  }
+`;
+const CustomSelectOptionContainer = styled.div`
+  display: none;
+  position: absolute;
+  width: 100%;
+  margin-top: 8px;
+  ${textFont("sm", "medium")}
+  color: ${color("gray", 900)};
+  padding: 4px 0;
+  border-radius: 8px;
+  background-color: white;
   box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.1),
     0px 4px 6px -2px rgba(16, 24, 40, 0.05);
-  border-radius: 8px;
 `;
-
-const Option = styled.div<{ isChecked: boolean }>`
-  display: flex;
-  justify-content: flex-start;
+const CustomSelectOption = styled.div`
   padding: 10px 14px;
-  cursor: pointer;
-  ${(props) => props.isChecked && highlighted}
-`;
-
-const Icon = styled.div`
-  width: 13px;
-  color: ${color("gray", 500)};
-  background: url("./icons/user.svg");
-  margin-right: 11px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-`;
-
-const OptionRadio = styled.input.attrs({ type: "radio" })`
-  display: none;
-  position: relative;
-`;
-const highlighted = css`
-  background-color: ${color("primary", 25)};
-  position: relative;
-  &:after {
-    content: "";
-    background: url("./icons/check.svg");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-
-    position: absolute;
-    height: 100%;
-    width: 13px;
-    right: 5%;
-    top: 2.5%;
+  background-color: #fff;
+  :hover {
+    background-color: ${color("primary", 25)};
   }
 `;
-const OptionLabel = styled.label``;
 
-export const Select: FC<SelectProps> = ({
-  state,
-  label,
-  hasIcon,
+const CustomSelectedOption = styled.div`
+  padding: 10px 14px;
+  background: url("/icons/check.svg") ${color("primary", 25)} no-repeat right
+    17px center;
+`;
+
+const Placeholder = styled.div`
+  color: ${color("gray", 500)};
+`;
+const titleCase = (str: string): string =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
+const Icon = styled.img`
+  transition: all 200ms;
+  transform: rotate(var(--chevronDirection, 0deg));
+`;
+export const Select = ({
+  id,
+  name,
+  value = "",
+  label = "",
+  placeholder = "",
+  disabled = false,
   options,
   hintText,
-  setError,
+  error = "",
+  icon = "",
   onChange,
-  selectedOption,
-}) => {
-  const [selectionState, setSelectionState] = useState(state);
-  const [selected, setSelected] = useState(selectedOption);
+}: SelectProps) => {
+  const [selectedOption, setSelectedOption] = useState(value);
+  const customSelectRef = useRef<HTMLDivElement>(null);
+  const customOptionsRef = useRef<HTMLDivElement>(null);
 
-  const openOptions = () => {
-    setSelectionState(SelectionStates.Open);
-  };
-
-  const selectOption = (option: string) => {
-    setSelected(option);
-    setSelectionState(SelectionStates.Focused);
-    if (onChange) {
-      onChange(option);
+  const clickHandler = useCallback(() => {
+    if (customOptionsRef.current && customSelectRef.current && !disabled) {
+      if (customOptionsRef.current.style.display === "block") {
+        customOptionsRef.current.style.display = "none";
+        customSelectRef.current.style.outline = "none";
+        customSelectRef.current.parentElement?.style.setProperty(
+          "--chevronDirection",
+          "0deg"
+        );
+      } else {
+        customOptionsRef.current.style.display = "block";
+        customSelectRef.current.style.outline = error
+          ? "4px solid #FEE4E2"
+          : "4px solid #F4EBFF";
+        customSelectRef.current.parentElement?.style.setProperty(
+          "--chevronDirection",
+          "180deg"
+        );
+      }
     }
-  };
+  }, [customOptionsRef, customSelectRef, disabled, error]);
+
+  useEffect(() => {
+    customSelectRef.current?.addEventListener("click", clickHandler);
+    return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      customSelectRef.current?.removeEventListener("click", clickHandler);
+    };
+  }, [customSelectRef, customOptionsRef, clickHandler]);
+
+  useEffect(() => {
+    const closeOpenMenus = (e: MouseEvent) => {
+      if (!customOptionsRef.current || !customSelectRef.current || disabled)
+        return;
+      if (!(e.target instanceof Node)) return;
+      if (
+        customOptionsRef.current.contains(e.target) ||
+        customSelectRef.current.contains(e.target)
+      )
+        return;
+
+      if (customOptionsRef.current.style.display === "block") {
+        customOptionsRef.current.style.display = "none";
+        customSelectRef.current.style.outline = "none";
+        customSelectRef.current.parentElement?.style.setProperty(
+          "--chevronDirection",
+          "0deg"
+        );
+      }
+    };
+
+    document.addEventListener("mousedown", closeOpenMenus);
+    return () => document.removeEventListener("mousedown", closeOpenMenus);
+  }, [disabled]);
+
+  useEffect(() => {
+    if (selectedOption == "--") {
+      setSelectedOption("");
+    }
+  }, [selectedOption]);
   return (
-    <SelectContainer>
-      <SelectLabel>{label}</SelectLabel>
-      <SelectBox>
-        <OptionsContainer state={selectionState}>
-          {options.map((option) => (
-            <Option key={option} isChecked={selected === option}>
-              {hasIcon && <Icon />}
-              <OptionRadio
-                id={option}
-                name="option"
-                onClick={() => selectOption(option)}
-                value={option}
-              />
-              <OptionLabel htmlFor={option}>{option}</OptionLabel>
-            </Option>
-          ))}
-        </OptionsContainer>
-        <Selected
-          state={selectionState}
-          setError={setError}
-          onClick={openOptions}
-          tabIndex={0}
+    <SelectGroupContainer>
+      {label && <SelectLabel htmlFor={id}>{label}</SelectLabel>}
+      <SelectContainer>
+        <NativeSelect
+          required
+          id={id}
+          name={name}
+          disabled={disabled}
+          error={error}
+          onChange={(e) => {
+            setSelectedOption(e.target.value);
+            if (onChange) onChange(e.target.value);
+          }}
         >
-          {selected}
-        </Selected>
-        {hintText && (
-          <SelectHint state={selectionState} setError={setError}>
-            {setError ? "This is an error message" : hintText}
-          </SelectHint>
-        )}
-      </SelectBox>
-    </SelectContainer>
+          {placeholder && !selectedOption && (
+            <option value="" disabled selected>
+              {placeholder}
+            </option>
+          )}
+          {options.map((option) => {
+            const lowerCasedOption = option.toLocaleLowerCase();
+            return (
+              <SelectOption
+                value={lowerCasedOption}
+                key={lowerCasedOption}
+                selected={option === selectedOption}
+              >
+                {titleCase(lowerCasedOption)}
+              </SelectOption>
+            );
+          })}
+        </NativeSelect>
+        <CustomSelect
+          ref={customSelectRef}
+          error={error}
+          disabled={disabled}
+          aria-hidden={true}
+          icon={icon}
+          data-cy-id={`${id}-test-select`}
+        >
+          {selectedOption ? (
+            titleCase(selectedOption)
+          ) : (
+            <Placeholder>{placeholder}</Placeholder>
+          )}
+          <Icon src={"/icons/chevron-down.svg"} />
+        </CustomSelect>
+        <CustomSelectOptionContainer
+          ref={customOptionsRef}
+          data-cy-id={`${id}-test-option`}
+        >
+          {options.map((option) => {
+            const lowerCasedOption = option.toLowerCase();
+            if (lowerCasedOption === selectedOption.toLowerCase()) {
+              return (
+                <CustomSelectedOption key={lowerCasedOption}>
+                  {titleCase(lowerCasedOption)}
+                </CustomSelectedOption>
+              );
+            }
+            return (
+              <CustomSelectOption
+                key={lowerCasedOption}
+                onClick={() => {
+                  setSelectedOption(option);
+                  const nativeSelectElement = document?.querySelector(
+                    `#${id}`
+                  ) as HTMLSelectElement;
+                  nativeSelectElement.value = option;
+                  if (onChange) onChange(option);
+                  clickHandler();
+                }}
+              >
+                {titleCase(lowerCasedOption)}
+              </CustomSelectOption>
+            );
+          })}
+        </CustomSelectOptionContainer>
+      </SelectContainer>
+      {error ? (
+        <SelectError>{error}</SelectError>
+      ) : hintText ? (
+        <SelectHint>{hintText}</SelectHint>
+      ) : (
+        ""
+      )}
+    </SelectGroupContainer>
   );
 };
