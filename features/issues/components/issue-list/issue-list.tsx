@@ -1,12 +1,14 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
 import { color, space, textFont, breakpoint } from "@styles/theme";
-import { StatusEnum, LevelEnum } from "@typings/issue.types";
 import { ProjectLanguage } from "@api/projects.types";
 import { Select, Input, Spinner } from "@features/ui";
 import { useProjects } from "@features/projects";
 import { useGetIssues } from "../../api";
 import { IssueRow } from "./issue-row";
+import { Select } from "@features/ui/select";
+import { Input } from "@features/ui/input";
+import { StatusEnum, LevelEnum } from "@typings/issue.types";
 
 const Container = styled.div`
   background: white;
@@ -22,7 +24,7 @@ const FilterContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1rem;
   margin-bottom: 25px;
   @media (max-width: ${breakpoint("desktop")}) {
@@ -88,7 +90,6 @@ function getParsedInfo(
     return enumToMatch[value as keyof typeof enumToMatch];
   return undefined;
 }
-
 export const tableLabels = ["Issue", "Level", "Events", "Users"];
 
 export function IssueList() {
@@ -96,7 +97,6 @@ export function IssueList() {
 
   let project = router.query.project as string;
   if (project) project = project.toLowerCase();
-
   const page = Number(router.query.page || 1);
 
   const level = getParsedInfo(
@@ -110,7 +110,7 @@ export function IssueList() {
   const navigateToPage = (newPage: number) =>
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, project: project },
+      query: { page: newPage, ...router.query },
     });
 
   const issuesPage = useGetIssues(page, project, level, status);
@@ -145,7 +145,6 @@ export function IssueList() {
       pathname: router.pathname,
       query: { ...router.query, [name]: value },
     });
-    console.log({ name, value });
   };
   return (
     <>
