@@ -1,10 +1,13 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { color, space, textFont } from "@styles/theme";
+import { color, space, textFont, breakpoint } from "@styles/theme";
 import { ProjectLanguage } from "@api/projects.types";
 import { useProjects } from "@features/projects";
 import { useGetIssues } from "../../api";
 import { IssueRow } from "./issue-row";
+import { Select } from "@features/ui/select";
+import { Input } from "@features/ui/input";
+import { StatusEnum, LevelEnum } from "@typings/issue.types";
 
 const Container = styled.div`
   background: white;
@@ -14,6 +17,20 @@ const Container = styled.div`
     0px 2px 4px -2px rgba(16, 24, 40, 0.06);
   border-radius: ${space(2)};
   overflow: hidden;
+`;
+
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-bottom: 25px;
+  @media (max-width: ${breakpoint("desktop")}) {
+    & div {
+      flex: 1;
+    }
+  }
 `;
 
 const Table = styled.table`
@@ -62,21 +79,41 @@ const PageNumber = styled.span`
   ${textFont("sm", "medium")}
 `;
 
+function getParsedInfo(
+  value: string | undefined,
+  enumToMatch: object
+): string | undefined {
+  if (value === undefined) return undefined;
+  const enumKeys = Object.keys(enumToMatch);
+  if (enumKeys.includes(value))
+    return enumToMatch[value as keyof typeof enumToMatch];
+  return undefined;
+}
+export const tableLabels = ["Issue", "Level", "Events", "Users"];
+
 export function IssueList() {
   const router = useRouter();
 
-  const project = router.query.project as string;
+  let project = router.query.project as string;
+  if (project) project = project.toLowerCase();
   const page = Number(router.query.page || 1);
+
+  const level = getParsedInfo(
+    router.query.level as string | undefined,
+    LevelEnum
+  );
+  const status = getParsedInfo(
+    router.query.status as string | undefined,
+    StatusEnum
+  );
   const navigateToPage = (newPage: number) =>
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, project: project },
+      query: { page: newPage, ...router.query },
     });
-  // console.log("page:", page);
-  // const per_page = 10;
-  const issuesPage = useGetIssues(page, project);
 
-  // console.log("issuesPage:", issuesPage);
+  const issuesPage = useGetIssues(page, project, level, status);
+
   const projects = useProjects();
 
   if (projects.isLoading || issuesPage.isLoading) {
@@ -102,47 +139,79 @@ export function IssueList() {
   );
   const { items, meta } = issuesPage.data || {};
 
+  const fieldChangeHandler = (name: string) => (value: string) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, [name]: value },
+    });
+  };
   return (
-    <Container>
-      <Table>
-        <thead>
-          <HeaderRow>
-            <HeaderCell>Issue</HeaderCell>
-            <HeaderCell>Level</HeaderCell>
-            <HeaderCell>Events</HeaderCell>
-            <HeaderCell>Users</HeaderCell>
-          </HeaderRow>
-        </thead>
-        <tbody>
-          {(items || []).map((issue) => (
-            <IssueRow
-              key={issue.id}
-              issue={issue}
-              projectLanguage={projectIdToLanguage[issue.projectId]}
-            />
-          ))}
-        </tbody>
-      </Table>
-      <PaginationContainer>
-        <div>
-          <PaginationButton
-            onClick={() => navigateToPage(page - 1)}
-            disabled={page === 1}
-          >
-            Previous
-          </PaginationButton>
-          <PaginationButton
-            onClick={() => navigateToPage(page + 1)}
-            disabled={page === meta?.totalPages}
-          >
-            Next
-          </PaginationButton>
-        </div>
-        <PageInfo>
-          Page <PageNumber>{meta?.currentPage}</PageNumber> of{" "}
-          <PageNumber>{meta?.totalPages}</PageNumber>
-        </PageInfo>
-      </PaginationContainer>
-    </Container>
+    <>
+      <FilterContainer>
+        <Select
+          id="level"
+          name="level"
+          placeholder="Level"
+          options={["--", ...Object.keys(LevelEnum)]}
+          value={level}
+        />
+        <Select
+          id="status"
+          name="status"
+          placeholder="Status"
+          options={["--", ...Object.keys(StatusEnum)]}
+          value={status}
+        />
+
+        <Input
+          id="project"
+          iconSrc="/icons/search.svg"
+          name="project"
+          onChange={() => fieldChangeHandler(project)}
+          type="text"
+        />
+      </FilterContainer>
+      <Container>
+        <Table>
+          <thead>
+            <HeaderRow>
+              <HeaderCell>Issue</HeaderCell>
+              <HeaderCell>Level</HeaderCell>
+              <HeaderCell>Events</HeaderCell>
+              <HeaderCell>Users</HeaderCell>
+            </HeaderRow>
+          </thead>
+          <tbody>
+            {(items || []).map((issue) => (
+              <IssueRow
+                key={issue.id}
+                issue={issue}
+                projectLanguage={projectIdToLanguage[issue.projectId]}
+              />
+            ))}
+          </tbody>
+        </Table>
+        <PaginationContainer>
+          <div>
+            <PaginationButton
+              onClick={() => navigateToPage(page - 1)}
+              disabled={page === 1}
+            >
+              Previous
+            </PaginationButton>
+            <PaginationButton
+              onClick={() => navigateToPage(page + 1)}
+              disabled={page === meta?.totalPages}
+            >
+              Next
+            </PaginationButton>
+          </div>
+          <PageInfo>
+            Page <PageNumber>{meta?.currentPage}</PageNumber> of{" "}
+            <PageNumber>{meta?.totalPages}</PageNumber>
+          </PageInfo>
+        </PaginationContainer>
+      </Container>
+    </>
   );
 }

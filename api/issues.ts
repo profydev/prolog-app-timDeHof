@@ -7,6 +7,8 @@ const ENDPOINT = "/issue";
 export async function getIssues(
   page: number,
   project?: string | undefined,
+  level?: string | undefined,
+  status?: string | undefined,
   options?: { signal?: AbortSignal }
 ) {
   const { data } = await axios.get<Page<Issue>>(ENDPOINT, {

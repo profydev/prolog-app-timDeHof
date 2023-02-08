@@ -10,7 +10,7 @@ export type InputProps = {
   iconSrc?: string;
   hintText?: string;
   hasIcon?: boolean;
-  state: InputStates;
+  state?: InputStates;
   setError?: boolean;
   inputValue?: string;
   onChange?: (value: string) => void;
@@ -39,7 +39,7 @@ const Label = styled.label`
 const CustomInput = styled.input<{
   iconSrc?: string;
   hasIcon?: boolean;
-  state: InputStates;
+  state?: InputStates;
   setError?: boolean;
 }>`
   ${textFont("md", "regular")}
@@ -60,6 +60,7 @@ const CustomInput = styled.input<{
     ${(props) => (props.setError ? color("error", 300) : color("gray", 300))};
 
   &:focus {
+    outline: none;
     border: 1px solid
       ${(props) =>
         props.setError ? color("error", 300) : color("primary", 300)};
@@ -113,7 +114,6 @@ export const Input: FC<InputProps> = ({
   setError,
   inputValue = "",
   state,
-  onFocus,
   onChange,
   ...rest
 }) => {
