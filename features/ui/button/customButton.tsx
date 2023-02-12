@@ -19,11 +19,20 @@ export enum ButtonColor {
   error = "error",
 }
 
+export enum ButtonIcon {
+  none = "none",
+  only = "only",
+  leading = "leading",
+  trailing = "trailing",
+}
+
 type ButtonProps = {
-  children: JSX.Element | string;
+  iconSrc: string;
+  text: string;
   size: ButtonSize;
   color: ButtonColor;
-  isDisabled: boolean;
+  isDisabled?: boolean;
+  iconLocation?: ButtonIcon;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const ButtonContainer = styled(Button)<{
@@ -35,6 +44,7 @@ const ButtonContainer = styled(Button)<{
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   ${(props) => {
     return css`
       cursor: ${props.isDisabled ? "not-allowed" : "pointer"};
@@ -180,11 +190,18 @@ const ButtonContainer = styled(Button)<{
     }
   }}
 `;
-
+const Icon = styled.img`
+  height: 13px;
+`;
+const Text = styled.p`
+  margin: 0;
+  ${textFont("md", "medium")}
+`;
 export const CustomButton: FC<ButtonProps> = ({
-  children,
-  isDisabled = false,
+  text,
   size,
+  iconSrc,
+  isDisabled = false,
   color = ButtonColor.primary,
   ...OtherProps
 }) => {
@@ -195,7 +212,7 @@ export const CustomButton: FC<ButtonProps> = ({
       color={color}
       {...OtherProps}
     >
-      {children}
+      <Icon src={iconSrc} /> <Text>{text}</Text>
     </ButtonContainer>
   );
 };

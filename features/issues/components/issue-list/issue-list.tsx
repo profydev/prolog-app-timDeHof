@@ -3,7 +3,12 @@ import styled from "styled-components";
 import { color, space, textFont, breakpoint } from "@styles/theme";
 import { StatusEnum, LevelEnum } from "@typings/issue.types";
 import { ProjectLanguage } from "@api/projects.types";
-import { Select, Input, Spinner } from "@features/ui";
+import { Select, Input, Spinner, CustomButton } from "@features/ui";
+import {
+  ButtonSize,
+  ButtonColor,
+  ButtonIcon,
+} from "@features/ui/button/customButton";
 import { useProjects } from "@features/projects";
 import { useGetIssues } from "../../api";
 import { IssueRow } from "./issue-row";
@@ -22,7 +27,7 @@ const FilterContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 1rem;
   margin-bottom: 25px;
   @media (max-width: ${breakpoint("desktop")}) {
@@ -31,7 +36,10 @@ const FilterContainer = styled.div`
     }
   }
 `;
-
+const FilterInputContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -148,28 +156,45 @@ export function IssueList() {
   return (
     <>
       <FilterContainer>
-        <Select
-          id="level"
-          name="level"
-          placeholder="Level"
-          options={["--", ...Object.keys(LevelEnum)]}
-          value={level}
-        />
-        <Select
-          id="status"
-          name="status"
-          placeholder="Status"
-          options={["--", ...Object.keys(StatusEnum)]}
-          value={status}
-        />
+        <CustomButton
+          color={ButtonColor.primary}
+          onClick={() => {
+            fieldChangeHandler;
+          }}
+          iconLocation={ButtonIcon.trailing}
+          iconSrc={"/icons/check-white.svg"}
+          text={"Resolve selected issues"}
+          size={ButtonSize.md}
+        >
+          Resolve selected issues
+        </CustomButton>
+        <FilterInputContainer>
+          <Select
+            id="level"
+            name="level"
+            placeholder="Level"
+            options={["--", ...Object.keys(LevelEnum)]}
+            onChange={() => fieldChangeHandler("level")}
+            value={level}
+          />
+          <Select
+            id="status"
+            name="status"
+            placeholder="Status"
+            options={["--", ...Object.keys(StatusEnum)]}
+            onChange={() => fieldChangeHandler("status")}
+            value={status}
+          />
 
-        <Input
-          id="project"
-          iconSrc="/icons/search.svg"
-          name="project"
-          onChange={() => fieldChangeHandler(project)}
-          type="text"
-        />
+          <Input
+            id="project"
+            name="project"
+            placeholder="Project Name"
+            iconSrc="/icons/search.svg"
+            onChange={() => fieldChangeHandler("project")}
+            type="text"
+          />
+        </FilterInputContainer>
       </FilterContainer>
       <Container>
         <Table>

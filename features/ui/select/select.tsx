@@ -316,7 +316,7 @@ export const Select = ({
           ) : (
             <Placeholder>{placeholder}</Placeholder>
           )}
-          <Icon src={"/icons/chevron-down.svg"} />
+          <Icon src={"/icons/chevron-down.svg"} alt="chevron-down" />
         </CustomSelect>
         <CustomSelectOptionContainer
           ref={customOptionsRef}
