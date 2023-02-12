@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,26 +13,14 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": [
-      "jest"
-    ],
+    "types": ["jest"],
     "baseUrl": ".",
     "paths": {
-      "@api/*": [
-        "api/*"
-      ],
-      "@config/*": [
-        "config/*"
-      ],
-      "@features/*": [
-        "features/*"
-      ],
-      "@styles/*": [
-        "styles/*"
-      ],
-      "@typings/*": [
-        "typings/*"
-      ]
+      "@api/*": ["api/*"],
+      "@config/*": ["config/*"],
+      "@features/*": ["features/*"],
+      "@styles/*": ["styles/*"],
+      "@typings/*": ["typings/*"]
     },
     "noEmit": true
   },
@@ -46,9 +30,5 @@
     "**/*.tsx",
     "features/ui/select/select.backup"
   ],
-  "exclude": [
-    "node_modules",
-    "cypress",
-    "cypress.config.ts"
-  ]
+  "exclude": ["node_modules", "cypress", "cypress.config.ts"]
 }
