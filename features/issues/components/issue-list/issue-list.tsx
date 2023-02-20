@@ -96,6 +96,7 @@ export function IssueList() {
 
   let project = router.query.project as string;
   if (project) project = project.toLowerCase();
+
   const page = Number(router.query.page || 1);
 
   const level = getParsedInfo(
@@ -144,6 +145,7 @@ export function IssueList() {
       pathname: router.pathname,
       query: { ...router.query, [name]: value },
     });
+    console.log({ name, value });
   };
   return (
     <>
