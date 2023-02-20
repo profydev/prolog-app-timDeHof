@@ -104,6 +104,7 @@ export function IssueList() {
 
   let project = router.query.project as string;
   if (project) project = project.toLowerCase();
+
   const page = Number(router.query.page || 1);
 
   const level = getParsedInfo(
@@ -152,49 +153,36 @@ export function IssueList() {
       pathname: router.pathname,
       query: { ...router.query, [name]: value },
     });
+    console.log({ name, value });
   };
   return (
     <>
       <FilterContainer>
-        <CustomButton
-          color={ButtonColor.primary}
-          onClick={() => {
-            fieldChangeHandler;
-          }}
-          iconLocation={ButtonIcon.trailing}
-          iconSrc={"/icons/check-white.svg"}
-          text={"Resolve selected issues"}
-          size={ButtonSize.md}
-        >
-          Resolve selected issues
-        </CustomButton>
-        <FilterInputContainer>
-          <Select
-            id="level"
-            name="level"
-            placeholder="Level"
-            options={["--", ...Object.keys(LevelEnum)]}
-            onChange={() => fieldChangeHandler("level")}
-            value={level}
-          />
-          <Select
-            id="status"
-            name="status"
-            placeholder="Status"
-            options={["--", ...Object.keys(StatusEnum)]}
-            onChange={() => fieldChangeHandler("status")}
-            value={status}
-          />
+        <Select
+          id="level"
+          name="level"
+          placeholder="Level"
+          options={["--", ...Object.keys(LevelEnum)]}
+          onChange={fieldChangeHandler("level")}
+          value={level}
+        />
+        <Select
+          id="status"
+          name="status"
+          placeholder="Status"
+          options={["--", ...Object.keys(StatusEnum)]}
+          onChange={fieldChangeHandler("status")}
+          value={status}
+        />
 
-          <Input
-            id="project"
-            name="project"
-            placeholder="Project Name"
-            iconSrc="/icons/search.svg"
-            onChange={() => fieldChangeHandler("project")}
-            type="text"
-          />
-        </FilterInputContainer>
+        <Input
+          id="project"
+          iconSrc="/icons/search.svg"
+          placeholder="Project Name"
+          name="project"
+          onChange={() => fieldChangeHandler("project")}
+          inputValue={project}
+        />
       </FilterContainer>
       <Container>
         <Table>
