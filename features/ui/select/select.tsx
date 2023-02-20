@@ -1,10 +1,4 @@
-import React, {
-  InputHTMLAttributes,
-  useState,
-  useRef,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { color, textFont } from "@styles/theme";
 
@@ -19,8 +13,8 @@ export type SelectProps = {
   hintText?: string;
   error?: string;
   icon?: string;
-  onChange?: (selectedOption: string) => void;
-} & InputHTMLAttributes<HTMLSelectElement>;
+  onChange?: (event: string) => void;
+};
 
 const SelectGroupContainer = styled.div``;
 const SelectContainer = styled.div`
@@ -286,18 +280,14 @@ export const Select = ({
           }}
         >
           {placeholder && !selectedOption && (
-            <option value="" disabled selected>
+            <option value={selectedOption} disabled>
               {placeholder}
             </option>
           )}
           {options.map((option) => {
             const lowerCasedOption = option.toLocaleLowerCase();
             return (
-              <SelectOption
-                value={lowerCasedOption}
-                key={lowerCasedOption}
-                selected={option === selectedOption}
-              >
+              <SelectOption value={lowerCasedOption} key={lowerCasedOption}>
                 {titleCase(lowerCasedOption)}
               </SelectOption>
             );

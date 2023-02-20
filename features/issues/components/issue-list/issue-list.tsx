@@ -96,6 +96,7 @@ export function IssueList() {
 
   let project = router.query.project as string;
   if (project) project = project.toLowerCase();
+
   const page = Number(router.query.page || 1);
 
   const level = getParsedInfo(
@@ -144,6 +145,7 @@ export function IssueList() {
       pathname: router.pathname,
       query: { ...router.query, [name]: value },
     });
+    console.log({ name, value });
   };
   return (
     <>
@@ -153,6 +155,7 @@ export function IssueList() {
           name="level"
           placeholder="Level"
           options={["--", ...Object.keys(LevelEnum)]}
+          onChange={fieldChangeHandler("level")}
           value={level}
         />
         <Select
@@ -160,15 +163,17 @@ export function IssueList() {
           name="status"
           placeholder="Status"
           options={["--", ...Object.keys(StatusEnum)]}
+          onChange={fieldChangeHandler("status")}
           value={status}
         />
 
         <Input
           id="project"
           iconSrc="/icons/search.svg"
+          placeholder="Project Name"
           name="project"
-          onChange={() => fieldChangeHandler(project)}
-          type="text"
+          onChange={() => fieldChangeHandler("project")}
+          inputValue={project}
         />
       </FilterContainer>
       <Container>
