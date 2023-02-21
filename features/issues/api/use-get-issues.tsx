@@ -15,10 +15,15 @@ export function getQueryKey(page?: number, projectId?: string | undefined) {
   return [QUERY_KEY, page];
 }
 
-export function useGetIssues(page: number, projectId?: string | undefined) {
+export function useGetIssues(
+  page: number,
+  projectId?: string | undefined,
+  level?: string | undefined,
+  status?: string
+) {
   const query = useQuery<Page<Issue>, Error>(
     getQueryKey(page, projectId),
-    ({ signal }) => getIssues(page, projectId, { signal }),
+    ({ signal }) => getIssues(page, projectId, level, status, { signal }),
     {
       keepPreviousData: true,
     }
@@ -30,9 +35,10 @@ export function useGetIssues(page: number, projectId?: string | undefined) {
     if (query.data?.meta.hasNextPage) {
       queryClient.prefetchQuery(
         getQueryKey(page + 1, projectId),
-        ({ signal }) => getIssues(page + 1, projectId, { signal })
+        ({ signal }) =>
+          getIssues(page + 1, projectId, level, status, { signal })
       );
     }
-  }, [query.data, page, projectId, queryClient]);
+  }, [query.data, page, level, status, projectId, queryClient]);
   return query;
 }

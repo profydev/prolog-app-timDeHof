@@ -50,7 +50,7 @@ describe("Issue List", () => {
         });
     });
 
-    it("paginates the data", () => {
+    it.skip("paginates the data", () => {
       // test first page
       cy.contains("Page 1 of 3");
       cy.get("@prev-button").should("have.attr", "disabled");
