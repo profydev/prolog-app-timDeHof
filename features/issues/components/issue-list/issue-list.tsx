@@ -110,7 +110,7 @@ export function IssueList() {
   const navigateToPage = (newPage: number) =>
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, project: project },
+      query: { page: newPage, ...router.query },
     });
 
   const issuesPage = useGetIssues(page, project, level, status);
@@ -212,10 +212,12 @@ export function IssueList() {
               Next
             </PaginationButton>
           </div>
+
           <PageInfo data-cy="pageInfo">
             Page{" "}
             <PageNumber data-cy="currentPage">{meta?.currentPage}</PageNumber>{" "}
             of <PageNumber>{meta?.totalPages}</PageNumber>
+
           </PageInfo>
         </PaginationContainer>
       </Container>
