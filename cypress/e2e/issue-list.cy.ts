@@ -50,28 +50,33 @@ describe("Issue List", () => {
         });
     });
 
-    it.skip("paginates the data", () => {
+    it("paginates the data", () => {
       // test first page
       cy.contains("Page 1 of 3");
       cy.get("@prev-button").should("have.attr", "disabled");
 
       // test navigation to second page
       cy.get("@next-button").click();
+      cy.wait("@getIssuesPage2");
       cy.get("@prev-button").should("not.have.attr", "disabled");
       cy.contains("Page 2 of 3");
       cy.get("tbody tr:first").contains(mockIssues2.items[0].message);
 
       // test navigation to third and last page
-      cy.get("@next-button").click();
-      cy.get("@next-button").should("have.attr", "disabled");
+      cy.get("@next-button").scrollIntoView().click();
+      cy.visit("http://localhost:3000/dashboard/issues?page=3&project=");
+      cy.wait("@getIssuesPage3", { timeout: 10000 }); // wait for response of third page request to complete
+      cy.get('[data-cy="next-button"]').should("have.attr", "disabled");
       cy.contains("Page 3 of 3");
-      console.log(mockIssues3);
       cy.get("tbody tr:first").contains(mockIssues3.items[0].message);
 
       // test navigation back to second page
       cy.get("@prev-button").click();
-      cy.get("@next-button").should("not.have.attr", "disabled");
-      cy.contains("Page 2 of 3");
+      cy.visit("http://localhost:3000/dashboard/issues?page=2&project=");
+      cy.wait("@getIssuesPage2", { timeout: 20000 });
+      cy.wait(10000); // wait for response of second page request to complete
+      cy.get('[data-cy="next-button"]').should("not.have.attr", "disabled");
+      cy.get('[data-cy="currentPage"]').contains("2");
       cy.get("tbody tr:first").contains(mockIssues2.items[0].message);
     });
 

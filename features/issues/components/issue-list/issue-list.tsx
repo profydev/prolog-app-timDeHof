@@ -3,12 +3,7 @@ import styled from "styled-components";
 import { color, space, textFont, breakpoint } from "@styles/theme";
 import { StatusEnum, LevelEnum } from "@typings/issue.types";
 import { ProjectLanguage } from "@api/projects.types";
-import { Select, Input, Spinner, CustomButton } from "@features/ui";
-import {
-  ButtonSize,
-  ButtonColor,
-  ButtonIcon,
-} from "@features/ui/button/customButton";
+import { Select, Input, Spinner } from "@features/ui";
 import { useProjects } from "@features/projects";
 import { useGetIssues } from "../../api";
 import { IssueRow } from "./issue-row";
@@ -36,10 +31,7 @@ const FilterContainer = styled.div`
     }
   }
 `;
-const FilterInputContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
+
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
@@ -118,7 +110,7 @@ export function IssueList() {
   const navigateToPage = (newPage: number) =>
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, ...router.query },
+      query: { page: newPage, project: project },
     });
 
   const issuesPage = useGetIssues(page, project, level, status);
@@ -215,13 +207,15 @@ export function IssueList() {
             <PaginationButton
               onClick={() => navigateToPage(page + 1)}
               disabled={page === meta?.totalPages}
+              data-cy="next-button"
             >
               Next
             </PaginationButton>
           </div>
-          <PageInfo>
-            Page <PageNumber>{meta?.currentPage}</PageNumber> of{" "}
-            <PageNumber>{meta?.totalPages}</PageNumber>
+          <PageInfo data-cy="pageInfo">
+            Page{" "}
+            <PageNumber data-cy="currentPage">{meta?.currentPage}</PageNumber>{" "}
+            of <PageNumber>{meta?.totalPages}</PageNumber>
           </PageInfo>
         </PaginationContainer>
       </Container>

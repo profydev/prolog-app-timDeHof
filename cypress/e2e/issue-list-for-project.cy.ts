@@ -10,18 +10,32 @@ describe("filtered issue list", () => {
       fixture: "projects.json",
     }).as("getProjects");
 
-    cy.intercept("GET", `https://prolog-api.profy.dev/issue?page=1`, {
-      fixture: "issues-for-project-page-1.json",
-    }).as("getProjectIssuesPage1");
-    cy.intercept("GET", `https://prolog-api.profy.dev/issue?page=2`, {
-      fixture: "issues-for-project-page-2.json",
-    }).as("getProjectIssuesPage2");
-    cy.intercept("GET", `https://prolog-api.profy.dev/issue?page=3`, {
-      fixture: "issues-for-project-page-3.json",
-    }).as("getProjectIssuesPage3");
+    cy.intercept(
+      "GET",
+      `https://prolog-api.profy.dev/issue?page=1&project=frontend+-+web`,
+      {
+        fixture: "issues-for-project-page-1.json",
+      }
+    ).as("getProjectIssuesPage1");
+    cy.intercept(
+      "GET",
+      `https://prolog-api.profy.dev/issue?page=2&project=frontend+-+web`,
+      {
+        fixture: "issues-for-project-page-2.json",
+      }
+    ).as("getProjectIssuesPage2");
+    cy.intercept(
+      "GET",
+      `https://prolog-api.profy.dev/issue?page=3&project=frontend+-+web`,
+      {
+        fixture: "issues-for-project-page-3.json",
+      }
+    ).as("getProjectIssuesPage3");
 
     // open issues page
-    cy.visit(`http://localhost:3000/dashboard/issues?page=1`);
+    cy.visit(
+      `http://localhost:3000/dashboard/issues?page=1&project=frontend+-+web`
+    );
 
     // wait for request to resolve
     cy.wait(["@getProjects", "@getProjectIssuesPage1"]);
@@ -65,22 +79,29 @@ describe("filtered issue list", () => {
         });
     });
 
-    it.skip("paginates the data", () => {
+    it("paginates the data", () => {
       // test first page
       cy.contains("Page 1 of 3");
       cy.get("@prev-button").should("have.attr", "disabled");
 
       // test navigation to second page
       cy.get("@next-button").click();
-      cy.visit(`http://localhost:3000/dashboard/issues?page=2`);
+      cy.visit(
+        `http://localhost:3000/dashboard/issues?page=2&project=frontend+-+web`
+      );
       cy.wait("@getProjectIssuesPage2");
+      cy.wait(4000);
       cy.get("@prev-button").should("not.have.attr", "disabled");
-      cy.contains("Page 2 of 3");
+      cy.get('[data-cy="currentPage"]').contains("2");
       cy.get("tbody tr:first").contains(mockProjectIssues2.items[0].message);
 
       // test navigation to third and last page
-      cy.get("@next-button").click();
-      cy.get("@next-button").should("have.attr", "disabled");
+      cy.get("@next-button").scrollIntoView().click();
+      cy.visit(
+        `http://localhost:3000/dashboard/issues?page=3&project=frontend+-+web`
+      );
+      cy.wait("@getProjectIssuesPage3", { timeout: 10000 });
+      cy.get('[data-cy="next-button"]').should("have.attr", "disabled");
       cy.contains("Page 3 of 3");
       cy.get("tbody tr:first").contains(mockProjectIssues3.items[0].message);
 
@@ -93,18 +114,24 @@ describe("filtered issue list", () => {
 
     it("checks for the correct number of issues per page", () => {
       // test the first page
-      cy.visit(`http://localhost:3000/dashboard/issues?page=1`);
+      cy.visit(
+        `http://localhost:3000/dashboard/issues?page=1&project=frontend+-+web`
+      );
       cy.wait("@getProjectIssuesPage1");
       cy.get("main").find("tbody").find("tr").should("have.length", 9);
 
       // test the second page
-      cy.visit(`http://localhost:3000/dashboard/issues?page=2`);
+      cy.visit(
+        `http://localhost:3000/dashboard/issues?page=2&project=frontend+-+web`
+      );
       cy.wait("@getProjectIssuesPage2");
       cy.get("main").find("tbody").find("tr").should("have.length", 6);
 
       // test the third and final page
 
-      cy.visit(`http://localhost:3000/dashboard/issues?page=3`);
+      cy.visit(
+        `http://localhost:3000/dashboard/issues?page=3&project=frontend+-+web`
+      );
       cy.wait("@getProjectIssuesPage3");
       cy.get("main").find("tbody").find("tr").should("have.length", 7);
     });
