@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import styled from "styled-components";
-import { color, space, textFont, breakpoint } from "@styles/theme";
-import { StatusEnum, LevelEnum } from "@typings/issue.types";
+import { color, space, textFont } from "@styles/theme";
 import { ProjectLanguage } from "@api/projects.types";
-import { Select, Input, Spinner } from "@features/ui";
+import { Spinner } from "@features/ui";
 import { useProjects } from "@features/projects";
 import { useGetIssues } from "../../api";
 import { IssueRow } from "./issue-row";
-
+import { Filters } from "../filters/filters";
+import { useFilters } from "@features/issues/hooks/use-filters";
 const Container = styled.div`
   background: white;
   border: 1px solid ${color("gray", 200)};
@@ -16,20 +16,6 @@ const Container = styled.div`
     0px 2px 4px -2px rgba(16, 24, 40, 0.06);
   border-radius: ${space(2)};
   overflow: hidden;
-`;
-
-const FilterContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 25px;
-  @media (max-width: ${breakpoint("desktop")}) {
-    & div {
-      flex: 1;
-    }
-  }
 `;
 
 const Table = styled.table`
@@ -78,42 +64,20 @@ const PageNumber = styled.span`
   ${textFont("sm", "medium")}
 `;
 
-function getParsedInfo(
-  value: string | undefined,
-  enumToMatch: object
-): string | undefined {
-  if (value === undefined) return undefined;
-  const enumKeys = Object.keys(enumToMatch);
-  if (enumKeys.includes(value))
-    return enumToMatch[value as keyof typeof enumToMatch];
-  return undefined;
-}
-
 export const tableLabels = ["Issue", "Level", "Events", "Users"];
 
 export function IssueList() {
   const router = useRouter();
-
-  let project = router.query.project as string;
-  if (project) project = project.toLowerCase();
-
+  const { filters } = useFilters();
   const page = Number(router.query.page || 1);
 
-  const level = getParsedInfo(
-    router.query.level as string | undefined,
-    LevelEnum
-  );
-  const status = getParsedInfo(
-    router.query.status as string | undefined,
-    StatusEnum
-  );
   const navigateToPage = (newPage: number) =>
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, project: project },
+      query: { page: newPage, ...filters },
     });
 
-  const issuesPage = useGetIssues(page, project, level, status);
+  const issuesPage = useGetIssues(page);
 
   const projects = useProjects();
 
@@ -140,42 +104,9 @@ export function IssueList() {
   );
   const { items, meta } = issuesPage.data || {};
 
-  const fieldChangeHandler = (name: string) => (value: string) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, [name]: value },
-    });
-    console.log({ name, value });
-  };
   return (
     <>
-      <FilterContainer>
-        <Select
-          id="level"
-          name="level"
-          placeholder="Level"
-          options={["--", ...Object.keys(LevelEnum)]}
-          onChange={fieldChangeHandler("level")}
-          value={level}
-        />
-        <Select
-          id="status"
-          name="status"
-          placeholder="Status"
-          options={["--", ...Object.keys(StatusEnum)]}
-          onChange={fieldChangeHandler("status")}
-          value={status}
-        />
-
-        <Input
-          id="project"
-          iconSrc="/icons/search.svg"
-          placeholder="Project Name"
-          name="project"
-          onChange={() => fieldChangeHandler("project")}
-          inputValue={project}
-        />
-      </FilterContainer>
+      <Filters />
       <Container>
         <Table>
           <thead>

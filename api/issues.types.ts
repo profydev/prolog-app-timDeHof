@@ -4,6 +4,11 @@ export enum IssueLevel {
   error = "error",
 }
 
+export enum IssueStatus {
+  Unresolved = "open",
+  Resolved = "resolved",
+}
+
 export type Issue = {
   id: string;
   projectId: string;
@@ -13,4 +18,10 @@ export type Issue = {
   level: IssueLevel;
   numEvents: number;
   numUsers: number;
+};
+
+export type IssueFilters = {
+  level?: IssueLevel;
+  status?: IssueStatus;
+  project?: string;
 };

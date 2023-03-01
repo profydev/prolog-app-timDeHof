@@ -1,110 +1,66 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useRef,
+  SelectHTMLAttributes,
+  FormEventHandler,
+} from "react";
+import { useClickAway } from "react-use";
 import styled, { css } from "styled-components";
-import { color, textFont } from "@styles/theme";
+import { color, textFont, breakpoint } from "@styles/theme";
+import { SelectContext } from "./select-context";
 
 export type SelectProps = {
-  id: string;
-  name: string;
-  value?: string;
-  label?: string;
-  placeholder: string;
-  options: string[];
-  disabled?: boolean;
-  hintText?: string;
+  children: ReactNode | ReactNode[];
   error?: string;
+  defaultValue?: string;
+  placeholder: string;
+  disabled?: boolean;
   icon?: string;
-  onChange?: (event: string) => void;
-};
+  label?: string;
+  hintText?: string;
+  onChange?: FormEventHandler<HTMLDivElement> | undefined;
+} & Omit<SelectHTMLAttributes<HTMLSelectElement>, "children">;
 
-const SelectGroupContainer = styled.div``;
 const SelectContainer = styled.div`
   position: relative;
+  display: block;
   min-width: 160px;
-
-  @media (hover: hover) {
-    & > select:focus + div {
-      display: none;
-    }
-  }
-  & * {
-    box-sizing: border-box;
+  width: calc(5rem * 4);
+  @media (max-width: ${breakpoint("desktop")}) {
+    align-self: stretch;
   }
 `;
-const SelectLabel = styled.label`
+
+const SelectLabel = styled.p`
+  position: absolute;
+  bottom: 1rem;
   ${textFont("sm", "medium")}
   color: ${color("gray", 700)};
-  display: block;
-  margin-bottom: 6px;
-`;
-
-const NativeSelect = styled.select<{
-  error: string;
-}>`
-  // remove default styles
-  appearance: none;
-  display: none;
-  background-color: transparent;
-  border: none;
-  padding: 0 1em 0 0;
   margin: 0;
-  width: 100%;
-  font-family: inherit;
-  font-size: inherit;
-  cursor: inherit;
-  line-height: 1.5;
-  outline: none;
-
-  width: 100%;
-  border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #fff;
-  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-  display: grid;
-
-  :disabled {
-    color: $color("gray", 500);
-    background-color: ${color("gray", 50)};
-  }
-
-  :invalid {
-    color: ${color("gray", 500)};
-  }
-
-  ${(props) =>
-    css`
-      border: 1px solid
-        ${props.error ? color("error", 300) : color("gray", 300)};
-    `}
-
-  :focus {
-    ${(props) =>
-      css`
-        border-color: 1px solid
-          ${props.error ? color("error", 300) : color("gray", 300)};
-        outline: 4px solid
-          ${props.error ? color("error", 100) : color("primary", 100)};
-      `}
-  }
+  margin-bottom: 0.25rem;
 `;
 
-const SelectOption = styled.option`
-  z-index: 99;
-`;
-
-const SelectHint = styled.span`
+const SelectHint = styled.p`
+  position: relative;
+  top: 46px;
   ${textFont("sm", "regular")};
   color: ${color("gray", 500)};
-  display: block;
-  margin-top: 6px;
+  letter-spacing: 0.05rem;
+  margin: 0;
+  margin-top: 0.25rem;
 `;
 
 const SelectError = styled.span`
+  position: relative;
+  top: 46px;
   ${textFont("sm", "regular")};
-  color: ${color("error", 500)};
-  display: block;
-  margin-top: 6px;
+  color: ${color("gray", 500)};
+  letter-spacing: 0.05rem;
+  margin: 0;
+  margin-top: 0.25rem;
 `;
 
 const CustomSelect = styled.div<{
@@ -118,7 +74,6 @@ const CustomSelect = styled.div<{
   top: 0;
   left: 0;
   display: none;
-
   width: 100%;
   border-radius: 8px;
   padding: 10px 14px;
@@ -150,203 +105,122 @@ const CustomSelect = styled.div<{
     }
   }
 `;
-const CustomSelectOptionContainer = styled.div`
-  display: none;
-  position: absolute;
-  width: 100%;
-  margin-top: 8px;
-  ${textFont("sm", "medium")}
-  color: ${color("gray", 900)};
-  padding: 4px 0;
-  border-radius: 8px;
-  background-color: white;
-  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.1),
-    0px 4px 6px -2px rgba(16, 24, 40, 0.05);
-`;
-const CustomSelectOption = styled.div`
-  padding: 10px 14px;
-  background-color: #fff;
-  :hover {
-    background-color: ${color("primary", 25)};
-  }
-`;
-
-const CustomSelectedOption = styled.div`
-  padding: 10px 14px;
-  background: url("/icons/check.svg") ${color("primary", 25)} no-repeat right
-    17px center;
-`;
 
 const Placeholder = styled.div`
   color: ${color("gray", 500)};
 `;
+
+const Icon = styled.img<{
+  showDropdown: boolean;
+}>`
+  transition: all 200ms;
+  transform: ${({ showDropdown }) =>
+    showDropdown ? "rotate(180deg)" : "none"};
+`;
+
+const OptionalIcon = styled.img`
+  width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.25rem 0.25rem;
+`;
+
+const SelectList = styled.ul<{ showDropdown: boolean }>`
+  display: block;
+  width: 100%;
+  margin: 3rem 0 0;
+  padding: 0;
+  position: absolute;
+  background: white;
+  box-shadow: 0 7px 12px -6px #d0d5dd;
+  box-shadow: 0px 12px 16px -4px rgba(16, 24, 40, 0.1),
+    0px 4px 6px -2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+
+  ${({ showDropdown }) =>
+    showDropdown
+      ? css`
+          opacity: 1;
+          visibility: visible;
+          position: absolute;
+          height: auto;
+          z-index: 200;
+        `
+      : css`
+          opacity: 0;
+          visibility: hidden;
+        `}
+`;
 const titleCase = (str: string): string =>
   str.charAt(0).toUpperCase() + str.slice(1);
 
-const Icon = styled.img`
-  transition: all 200ms;
-  transform: rotate(var(--chevronDirection, 0deg));
-`;
 export const Select = ({
-  id,
-  name,
-  value = "",
-  label = "",
   placeholder = "",
+  defaultValue = "",
+  icon = "",
   disabled = false,
-  options,
+  label = "",
   hintText,
   error = "",
-  icon = "",
-  onChange,
+  children,
+  ...props
 }: SelectProps) => {
-  const [selectedOption, setSelectedOption] = useState(value);
-  const customSelectRef = useRef<HTMLDivElement>(null);
-  const customOptionsRef = useRef<HTMLDivElement>(null);
+  const [selectedOption, setSelectedOption] = useState(defaultValue || "");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const ref = useRef(null);
 
-  const clickHandler = useCallback(() => {
-    if (customOptionsRef.current && customSelectRef.current && !disabled) {
-      if (customOptionsRef.current.style.display === "block") {
-        customOptionsRef.current.style.display = "none";
-        customSelectRef.current.style.outline = "none";
-        customSelectRef.current.parentElement?.style.setProperty(
-          "--chevronDirection",
-          "0deg"
-        );
-      } else {
-        customOptionsRef.current.style.display = "block";
-        customSelectRef.current.style.outline = error
-          ? "4px solid #FEE4E2"
-          : "4px solid #F4EBFF";
-        customSelectRef.current.parentElement?.style.setProperty(
-          "--chevronDirection",
-          "180deg"
-        );
-      }
-    }
-  }, [customOptionsRef, customSelectRef, disabled, error]);
+  useClickAway(ref, () => {
+    setShowDropdown(false);
+  });
 
-  useEffect(() => {
-    customSelectRef.current?.addEventListener("click", clickHandler);
-    return () => {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      customSelectRef.current?.removeEventListener("click", clickHandler);
-    };
-  }, [customSelectRef, customOptionsRef, clickHandler]);
+  const showDropdownHandler = useCallback(
+    () => setShowDropdown((prevShowDropdown) => !prevShowDropdown),
+    []
+  );
+  const updateSelectedOption = useCallback((option: string) => {
+    option === "--" ? setSelectedOption("") : setSelectedOption(option);
+    setShowDropdown(false);
+  }, []);
 
-  useEffect(() => {
-    const closeOpenMenus = (e: MouseEvent) => {
-      if (!customOptionsRef.current || !customSelectRef.current || disabled)
-        return;
-      if (!(e.target instanceof Node)) return;
-      if (
-        customOptionsRef.current.contains(e.target) ||
-        customSelectRef.current.contains(e.target)
-      )
-        return;
-
-      if (customOptionsRef.current.style.display === "block") {
-        customOptionsRef.current.style.display = "none";
-        customSelectRef.current.style.outline = "none";
-        customSelectRef.current.parentElement?.style.setProperty(
-          "--chevronDirection",
-          "0deg"
-        );
-      }
-    };
-
-    document.addEventListener("mousedown", closeOpenMenus);
-    return () => document.removeEventListener("mousedown", closeOpenMenus);
-  }, [disabled]);
-
-  useEffect(() => {
-    if (selectedOption == "--") {
-      setSelectedOption("");
-    }
-  }, [selectedOption]);
+  const value = useMemo(
+    () => ({ selectedOption, changeSelectedOption: updateSelectedOption }),
+    [selectedOption, updateSelectedOption]
+  );
   return (
-    <SelectGroupContainer>
-      {label && <SelectLabel htmlFor={id}>{label}</SelectLabel>}
-      <SelectContainer>
-        <NativeSelect
-          required
-          id={id}
-          name={name}
-          disabled={disabled}
-          error={error}
-          onChange={(e) => {
-            setSelectedOption(e.target.value);
-            if (onChange) onChange(e.target.value);
-          }}
-        >
-          {placeholder && !selectedOption && (
-            <option value={selectedOption} disabled>
-              {placeholder}
-            </option>
-          )}
-          {options.map((option) => {
-            const lowerCasedOption = option.toLocaleLowerCase();
-            return (
-              <SelectOption value={lowerCasedOption} key={lowerCasedOption}>
-                {titleCase(lowerCasedOption)}
-              </SelectOption>
-            );
-          })}
-        </NativeSelect>
+    <SelectContext.Provider value={value}>
+      <SelectContainer ref={ref}>
+        {label && <SelectLabel>{label}</SelectLabel>}
+
         <CustomSelect
-          ref={customSelectRef}
-          error={error}
+          onClick={showDropdownHandler}
           disabled={disabled}
-          aria-hidden={true}
+          error={error}
+          aria-expanded={showDropdown}
           icon={icon}
-          data-cy-id={`${id}-test-select`}
         >
+          {icon && <OptionalIcon src={icon} />}
           {selectedOption ? (
             titleCase(selectedOption)
           ) : (
             <Placeholder>{placeholder}</Placeholder>
           )}
-          <Icon src={"/icons/chevron-down.svg"} alt="chevron-down" />
+          <Icon
+            src={"/icons/chevron-down.svg"}
+            alt="chevron-down"
+            showDropdown={showDropdown}
+          />
         </CustomSelect>
-        <CustomSelectOptionContainer
-          ref={customOptionsRef}
-          data-cy-id={`${id}-test-option`}
-        >
-          {options.map((option) => {
-            const lowerCasedOption = option.toLowerCase();
-            if (lowerCasedOption === selectedOption.toLowerCase()) {
-              return (
-                <CustomSelectedOption key={lowerCasedOption}>
-                  {titleCase(lowerCasedOption)}
-                </CustomSelectedOption>
-              );
-            }
-            return (
-              <CustomSelectOption
-                key={lowerCasedOption}
-                onClick={() => {
-                  setSelectedOption(option);
-                  const nativeSelectElement = document?.querySelector(
-                    `#${id}`
-                  ) as HTMLSelectElement;
-                  nativeSelectElement.value = option;
-                  if (onChange) onChange(option);
-                  clickHandler();
-                }}
-              >
-                {titleCase(lowerCasedOption)}
-              </CustomSelectOption>
-            );
-          })}
-        </CustomSelectOptionContainer>
+
+        {hintText && !showDropdown && !error && (
+          <SelectHint>{hintText}</SelectHint>
+        )}
+        {error && !showDropdown && !disabled && (
+          <SelectError>{error}</SelectError>
+        )}
+        <SelectList showDropdown={showDropdown} role="listbox" tabIndex={-1}>
+          {children}
+        </SelectList>
       </SelectContainer>
-      {error ? (
-        <SelectError>{error}</SelectError>
-      ) : hintText ? (
-        <SelectHint>{hintText}</SelectHint>
-      ) : (
-        ""
-      )}
-    </SelectGroupContainer>
+    </SelectContext.Provider>
   );
 };
