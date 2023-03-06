@@ -1,6 +1,4 @@
 import { useRouter } from "next/router";
-import styled from "styled-components";
-import { color, space, textFont } from "@styles/theme";
 import { ProjectLanguage } from "@api/projects.types";
 import { Spinner } from "@features/ui";
 import { useProjects } from "@features/projects";
@@ -8,61 +6,7 @@ import { useGetIssues } from "../../api";
 import { IssueRow } from "./issue-row";
 import { Filters } from "../filters/filters";
 import { useFilters } from "@features/issues/hooks/use-filters";
-const Container = styled.div`
-  background: white;
-  border: 1px solid ${color("gray", 200)};
-  box-sizing: border-box;
-  box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1),
-    0px 2px 4px -2px rgba(16, 24, 40, 0.06);
-  border-radius: ${space(2)};
-  overflow: hidden;
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const HeaderRow = styled.tr`
-  border-bottom: 1px solid ${color("gray", 200)};
-`;
-
-const HeaderCell = styled.th`
-  padding: ${space(3, 6)};
-  text-align: left;
-  color: ${color("gray", 500)};
-  ${textFont("xs", "medium")};
-`;
-
-const PaginationContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: ${space(4, 6)};
-  border-top: 1px solid ${color("gray", 200)};
-`;
-
-const PaginationButton = styled.button`
-  height: 38px;
-  padding: ${space(0, 4)};
-  background: white;
-  border: 1px solid ${color("gray", 300)};
-  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-  border-radius: 6px;
-
-  &:not(:first-of-type) {
-    margin-left: ${space(3)};
-  }
-`;
-
-const PageInfo = styled.div`
-  color: ${color("gray", 700)};
-  ${textFont("sm", "regular")}
-`;
-
-const PageNumber = styled.span`
-  ${textFont("sm", "medium")}
-`;
+import * as il from "./issue-list.styles";
 
 export const tableLabels = ["Issue", "Level", "Events", "Users"];
 
@@ -71,11 +15,18 @@ export function IssueList() {
   const { filters } = useFilters();
   const page = Number(router.query.page || 1);
 
-  const navigateToPage = (newPage: number) =>
+  const navigateToPage = (newPage: number) => {
+    const newFilters: { [key: string]: string } = {};
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "") {
+        newFilters[key] = value;
+      }
+    });
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, ...filters },
+      query: { page: newPage, ...newFilters },
     });
+  };
 
   const issuesPage = useGetIssues(page);
 
@@ -102,20 +53,21 @@ export function IssueList() {
     }),
     {} as Record<string, ProjectLanguage>
   );
+
   const { items, meta } = issuesPage.data || {};
 
   return (
     <>
       <Filters />
-      <Container>
-        <Table>
+      <il.Container>
+        <il.Table>
           <thead>
-            <HeaderRow>
-              <HeaderCell>Issue</HeaderCell>
-              <HeaderCell>Level</HeaderCell>
-              <HeaderCell>Events</HeaderCell>
-              <HeaderCell>Users</HeaderCell>
-            </HeaderRow>
+            <il.HeaderRow>
+              <il.HeaderCell>Issue</il.HeaderCell>
+              <il.HeaderCell>Level</il.HeaderCell>
+              <il.HeaderCell>Events</il.HeaderCell>
+              <il.HeaderCell>Users</il.HeaderCell>
+            </il.HeaderRow>
           </thead>
           <tbody>
             {(items || []).map((issue) => (
@@ -126,31 +78,33 @@ export function IssueList() {
               />
             ))}
           </tbody>
-        </Table>
-        <PaginationContainer>
+        </il.Table>
+        <il.PaginationContainer>
           <div>
-            <PaginationButton
+            <il.PaginationButton
               onClick={() => navigateToPage(page - 1)}
               disabled={page === 1}
             >
               Previous
-            </PaginationButton>
-            <PaginationButton
+            </il.PaginationButton>
+            <il.PaginationButton
               onClick={() => navigateToPage(page + 1)}
               disabled={page === meta?.totalPages}
               data-cy="next-button"
             >
               Next
-            </PaginationButton>
+            </il.PaginationButton>
           </div>
 
-          <PageInfo data-cy="pageInfo">
+          <il.PageInfo data-cy="pageInfo">
             Page{" "}
-            <PageNumber data-cy="currentPage">{meta?.currentPage}</PageNumber>{" "}
-            of <PageNumber>{meta?.totalPages}</PageNumber>
-          </PageInfo>
-        </PaginationContainer>
-      </Container>
+            <il.PageNumber data-cy="currentPage">
+              {meta?.currentPage}
+            </il.PageNumber>{" "}
+            of <il.PageNumber>{meta?.totalPages}</il.PageNumber>
+          </il.PageInfo>
+        </il.PaginationContainer>
+      </il.Container>
     </>
   );
 }
