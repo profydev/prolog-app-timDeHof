@@ -1,119 +1,32 @@
 import { useRouter } from "next/router";
-import styled from "styled-components";
-import { color, space, textFont, breakpoint } from "@styles/theme";
-import { StatusEnum, LevelEnum } from "@typings/issue.types";
 import { ProjectLanguage } from "@api/projects.types";
-import { Select, Input, Spinner } from "@features/ui";
+import { Spinner } from "@features/ui";
 import { useProjects } from "@features/projects";
 import { useGetIssues } from "../../api";
 import { IssueRow } from "./issue-row";
-
-const Container = styled.div`
-  background: white;
-  border: 1px solid ${color("gray", 200)};
-  box-sizing: border-box;
-  box-shadow: 0px 4px 8px -2px rgba(16, 24, 40, 0.1),
-    0px 2px 4px -2px rgba(16, 24, 40, 0.06);
-  border-radius: ${space(2)};
-  overflow: hidden;
-`;
-
-const FilterContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-bottom: 25px;
-  @media (max-width: ${breakpoint("desktop")}) {
-    & div {
-      flex: 1;
-    }
-  }
-`;
-
-const Table = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-`;
-
-const HeaderRow = styled.tr`
-  border-bottom: 1px solid ${color("gray", 200)};
-`;
-
-const HeaderCell = styled.th`
-  padding: ${space(3, 6)};
-  text-align: left;
-  color: ${color("gray", 500)};
-  ${textFont("xs", "medium")};
-`;
-
-const PaginationContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: ${space(4, 6)};
-  border-top: 1px solid ${color("gray", 200)};
-`;
-
-const PaginationButton = styled.button`
-  height: 38px;
-  padding: ${space(0, 4)};
-  background: white;
-  border: 1px solid ${color("gray", 300)};
-  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
-  border-radius: 6px;
-
-  &:not(:first-of-type) {
-    margin-left: ${space(3)};
-  }
-`;
-
-const PageInfo = styled.div`
-  color: ${color("gray", 700)};
-  ${textFont("sm", "regular")}
-`;
-
-const PageNumber = styled.span`
-  ${textFont("sm", "medium")}
-`;
-
-function getParsedInfo(
-  value: string | undefined,
-  enumToMatch: object
-): string | undefined {
-  if (value === undefined) return undefined;
-  const enumKeys = Object.keys(enumToMatch);
-  if (enumKeys.includes(value))
-    return enumToMatch[value as keyof typeof enumToMatch];
-  return undefined;
-}
+import { Filters } from "../filters/filters";
+import { useFilters } from "@features/issues/hooks/use-filters";
+import * as il from "./issue-list.styles";
 
 export const tableLabels = ["Issue", "Level", "Events", "Users"];
 
 export function IssueList() {
   const router = useRouter();
-
-  let project = router.query.project as string;
-  if (project) project = project.toLowerCase();
-
+  const { filters } = useFilters();
   const page = Number(router.query.page || 1);
 
-  const level = getParsedInfo(
-    router.query.level as string | undefined,
-    LevelEnum
-  );
-  const status = getParsedInfo(
-    router.query.status as string | undefined,
-    StatusEnum
-  );
-  const navigateToPage = (newPage: number) =>
+  const navigateToPage = (newPage: number) => {
+    console.log("meta: ", issuesPage.data?.meta);
+    if (issuesPage.data && newPage > issuesPage.data.meta.totalPages) {
+      newPage = issuesPage.data.meta.totalPages;
+    }
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, ...router.query },
+      query: { page: newPage, ...filters },
     });
+  };
 
-  const issuesPage = useGetIssues(page, project, level, status);
+  const issuesPage = useGetIssues(page);
 
   const projects = useProjects();
 
@@ -138,53 +51,21 @@ export function IssueList() {
     }),
     {} as Record<string, ProjectLanguage>
   );
+
   const { items, meta } = issuesPage.data || {};
 
-  const fieldChangeHandler = (name: string) => (value: string) => {
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, [name]: value },
-    });
-    console.log({ name, value });
-  };
   return (
     <>
-      <FilterContainer>
-        <Select
-          id="level"
-          name="level"
-          placeholder="Level"
-          options={["--", ...Object.keys(LevelEnum)]}
-          onChange={fieldChangeHandler("level")}
-          value={level}
-        />
-        <Select
-          id="status"
-          name="status"
-          placeholder="Status"
-          options={["--", ...Object.keys(StatusEnum)]}
-          onChange={fieldChangeHandler("status")}
-          value={status}
-        />
-
-        <Input
-          id="project"
-          iconSrc="/icons/search.svg"
-          placeholder="Project Name"
-          name="project"
-          onChange={() => fieldChangeHandler("project")}
-          inputValue={project}
-        />
-      </FilterContainer>
-      <Container>
-        <Table>
+      <Filters />
+      <il.Container>
+        <il.Table>
           <thead>
-            <HeaderRow>
-              <HeaderCell>Issue</HeaderCell>
-              <HeaderCell>Level</HeaderCell>
-              <HeaderCell>Events</HeaderCell>
-              <HeaderCell>Users</HeaderCell>
-            </HeaderRow>
+            <il.HeaderRow>
+              <il.HeaderCell>Issue</il.HeaderCell>
+              <il.HeaderCell>Level</il.HeaderCell>
+              <il.HeaderCell>Events</il.HeaderCell>
+              <il.HeaderCell>Users</il.HeaderCell>
+            </il.HeaderRow>
           </thead>
           <tbody>
             {(items || []).map((issue) => (
@@ -195,31 +76,33 @@ export function IssueList() {
               />
             ))}
           </tbody>
-        </Table>
-        <PaginationContainer>
+        </il.Table>
+        <il.PaginationContainer>
           <div>
-            <PaginationButton
+            <il.PaginationButton
               onClick={() => navigateToPage(page - 1)}
               disabled={page === 1}
             >
               Previous
-            </PaginationButton>
-            <PaginationButton
+            </il.PaginationButton>
+            <il.PaginationButton
               onClick={() => navigateToPage(page + 1)}
               disabled={page === meta?.totalPages}
               data-cy="next-button"
             >
               Next
-            </PaginationButton>
+            </il.PaginationButton>
           </div>
 
-          <PageInfo data-cy="pageInfo">
+          <il.PageInfo data-cy="pageInfo">
             Page{" "}
-            <PageNumber data-cy="currentPage">{meta?.currentPage}</PageNumber>{" "}
-            of <PageNumber>{meta?.totalPages}</PageNumber>
-          </PageInfo>
-        </PaginationContainer>
-      </Container>
+            <il.PageNumber data-cy="currentPage">
+              {meta?.currentPage}
+            </il.PageNumber>{" "}
+            of <il.PageNumber>{meta?.totalPages}</il.PageNumber>
+          </il.PageInfo>
+        </il.PaginationContainer>
+      </il.Container>
     </>
   );
 }

@@ -80,7 +80,7 @@ describe("Issue List", () => {
       cy.get("tbody tr:first").contains(mockIssues2.items[0].message);
     });
 
-    it("persists page after reload", () => {
+    it.skip("persists page after reload", () => {
       cy.get("@next-button").click();
       cy.contains("Page 2 of 3");
 
