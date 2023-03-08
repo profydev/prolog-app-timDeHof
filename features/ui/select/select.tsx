@@ -163,7 +163,6 @@ export const Select = ({
   hintText,
   error = "",
   children,
-  ...props
 }: SelectProps) => {
   const [selectedOption, setSelectedOption] = useState(defaultValue || "");
   const [showDropdown, setShowDropdown] = useState(false);

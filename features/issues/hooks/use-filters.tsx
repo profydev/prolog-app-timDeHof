@@ -1,26 +1,26 @@
 import { useRouter } from "next/router";
 import { IssueFilters } from "@api/issues.types";
 
-const removeEmptyStrings = (issueFilters: any) => {
+const validateFilters = (issueFilters: Record<string, string>) => {
+  const validFilters: Record<string, string> = {};
   for (const key in issueFilters) {
-    console.log("key in issueFilters: ", key);
-    console.log("issueFilters[key]: ", issueFilters[key]);
-    if (issueFilters[key] === "") {
-      delete issueFilters[key];
+    if (issueFilters[key]) {
+      validFilters[key] = issueFilters[key];
     }
   }
-  return issueFilters;
+  return validFilters;
 };
 
 export const useFilters = () => {
   const router = useRouter();
-  const filters = {
-    status: router.query.status,
-    level: router.query.level,
-    project: router.query.project,
-  } as IssueFilters;
+  const filters = validateFilters({
+    status: router.query.status as string,
+    level: router.query.level as string,
+    project: router.query.project as string,
+  }) as IssueFilters;
   const handleFilters = (newFilters: IssueFilters) => {
-    const query = removeEmptyStrings({ ...router.query, ...newFilters });
+    const query = validateFilters({ ...router.query, ...newFilters });
+
     router.push({ query });
   };
   return { filters, handleFilters };

@@ -16,15 +16,13 @@ export function IssueList() {
   const page = Number(router.query.page || 1);
 
   const navigateToPage = (newPage: number) => {
-    const newFilters: { [key: string]: string } = {};
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== null && value !== undefined && value !== "") {
-        newFilters[key] = value;
-      }
-    });
+    console.log("meta: ", issuesPage.data?.meta);
+    if (issuesPage.data && newPage > issuesPage.data.meta.totalPages) {
+      newPage = issuesPage.data.meta.totalPages;
+    }
     router.push({
       pathname: router.pathname,
-      query: { page: newPage, ...newFilters },
+      query: { page: newPage, ...filters },
     });
   };
 
