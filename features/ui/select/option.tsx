@@ -5,6 +5,7 @@ import { color, textFont } from "@styles/theme";
 type OptionProps = {
   children: ReactNode | ReactNode[];
   value: string;
+  name?: string;
   handleCallback?: (value: string) => unknown;
 };
 
@@ -48,6 +49,7 @@ export function Option({ children, value, handleCallback }: OptionProps) {
   const isCurrentlySelected = selectedOption === value;
   return (
     <ListItem
+      data-testid="test-options"
       isCurrentlySelected={isCurrentlySelected}
       aria-selected={isCurrentlySelected}
       onClick={() => {
