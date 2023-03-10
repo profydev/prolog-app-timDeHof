@@ -14,6 +14,7 @@ import { SelectContext } from "./select-context";
 
 export type SelectProps = {
   children: ReactNode | ReactNode[];
+  name?: string;
   error?: string;
   defaultValue?: string;
   placeholder: string;
@@ -156,6 +157,7 @@ const titleCase = (str: string): string =>
 
 export const Select = ({
   placeholder = "",
+  name,
   defaultValue = "",
   icon = "",
   disabled = false,
@@ -187,7 +189,7 @@ export const Select = ({
   );
   return (
     <SelectContext.Provider value={value}>
-      <SelectContainer ref={ref}>
+      <SelectContainer data-testid={`${name}-test-select`} ref={ref}>
         {label && <SelectLabel>{label}</SelectLabel>}
 
         <CustomSelect

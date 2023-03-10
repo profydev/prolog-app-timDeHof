@@ -48,7 +48,9 @@ export const PaginationButton = styled.button`
   }
 `;
 
-export const PageInfo = styled.div`
+export const PageInfo = styled.div.attrs({
+  "data-cy": "page-info",
+})`
   color: ${color("gray", 700)};
   ${textFont("sm", "regular")}
 `;

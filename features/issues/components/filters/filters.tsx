@@ -71,6 +71,7 @@ export const Filters = () => {
   return (
     <FilterContainer>
       <Select
+        name="status"
         placeholder="Status"
         defaultValue={getStatusDefaultValue(filters)}
       >
@@ -79,9 +80,11 @@ export const Filters = () => {
 
           return (
             <Option
+              name="status"
               key={lowerCasedOption}
               value={lowerCasedOption}
               handleCallback={handleStatus}
+              data-test-id="status-test-options"
             >
               {lowerCasedOption}
             </Option>
@@ -89,15 +92,21 @@ export const Filters = () => {
         })}
       </Select>
 
-      <Select placeholder="Level" defaultValue={getLevelDefaultValue(filters)}>
+      <Select
+        name="level"
+        placeholder="Level"
+        defaultValue={getLevelDefaultValue(filters)}
+      >
         {levelOptions.map((option) => {
           const lowerCasedOption = option.toLocaleLowerCase();
 
           return (
             <Option
+              name="level"
               key={lowerCasedOption}
               value={lowerCasedOption}
               handleCallback={handleLevel}
+              data-cy="level-test-option"
             >
               {lowerCasedOption}
             </Option>

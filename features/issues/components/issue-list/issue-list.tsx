@@ -27,7 +27,6 @@ export function IssueList() {
   };
 
   const issuesPage = useGetIssues(page);
-
   const projects = useProjects();
 
   if (projects.isLoading || issuesPage.isLoading) {
