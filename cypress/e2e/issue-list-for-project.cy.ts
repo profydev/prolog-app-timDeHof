@@ -1,7 +1,7 @@
 // filtered issue pages
-import mockProjectIssues1 from "../fixtures/issues-for-project-page-1.json";
-import mockProjectIssues2 from "../fixtures/issues-for-project-page-2.json";
-import mockProjectIssues3 from "../fixtures/issues-for-project-page-3.json";
+import mockProjectIssues1 from "../fixtures/issues-page-pfe-1.json";
+import mockProjectIssues2 from "../fixtures/issues-page-pfe-2.json";
+import mockProjectIssues3 from "../fixtures/issues-page-pfe-3.json";
 
 describe("filtered issue list", () => {
   beforeEach(() => {
@@ -14,21 +14,21 @@ describe("filtered issue list", () => {
       "GET",
       `https://prolog-api.profy.dev/issue?page=1&project=frontend+-+web`,
       {
-        fixture: "issues-for-project-page-1.json",
+        fixture: "issues-page-pfe-1.json",
       }
     ).as("getProjectIssuesPage1");
     cy.intercept(
       "GET",
       `https://prolog-api.profy.dev/issue?page=2&project=frontend+-+web`,
       {
-        fixture: "issues-for-project-page-2.json",
+        fixture: "issues-page-pfe-2.json",
       }
     ).as("getProjectIssuesPage2");
     cy.intercept(
       "GET",
       `https://prolog-api.profy.dev/issue?page=3&project=frontend+-+web`,
       {
-        fixture: "issues-for-project-page-3.json",
+        fixture: "issues-page-pfe-3.json",
       }
     ).as("getProjectIssuesPage3");
 
@@ -47,7 +47,7 @@ describe("filtered issue list", () => {
   });
   context("desktop resolution", () => {
     beforeEach(() => {
-      cy.viewport(1025, 900);
+      cy.viewport(1440, 900);
     });
     it("renders the issues", () => {
       cy.get("main")
@@ -79,7 +79,7 @@ describe("filtered issue list", () => {
         });
     });
 
-    it.skip("paginates the data", () => {
+    it("paginates the data", () => {
       // test first page
       cy.contains("Page 1 of 3");
       cy.get("@prev-button").should("have.attr", "disabled");
