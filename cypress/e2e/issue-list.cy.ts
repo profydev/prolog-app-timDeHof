@@ -123,15 +123,21 @@ describe("Issue List", () => {
       cy.get('[data-testid="level-test-select"]').click();
       cy.get('[data-testid="test-options"]').contains("warning").click();
       cy.contains("Page 1 of 1");
+    });
+    it("has filters that can be cleared", () => {
+      cy.get('[data-testid="level-test-select"]').click();
+      cy.get('[data-testid="test-options"]').contains("error").click();
+      cy.get('[data-testid="level-test-select"]').click();
+      cy.get('[data-testid="test-options"]')
+        .eq("3")
+        .contains("--")
+        .click({ force: true });
+      cy.wait(1500);
+      cy.contains("Page 1 of 3");
+    });
 
-      it("has filters that can be cleared", () => {
-        cy.get('[data-testid="level-test-select"]').click();
-        cy.get('[data-testid="test-options"]').contains("error").click();
-        cy.get('[data-testid="level-test-select"]').click();
-        cy.get('[data-testid="test-options"]').contains("--").click();
-        cy.wait(1500);
-        cy.contains("Page 1 of 3");
-      });
+    it("can be filtered with the project input", () => {
+      cy.get("#project");
     });
   });
 });
