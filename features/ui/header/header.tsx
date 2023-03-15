@@ -42,6 +42,7 @@ const LinkList = styled(List)`
   justify-content: center;
 `;
 
+
 const DashboardButton = styled(CustomButton)`
   display: block;
   @media screen (max-width: ${breakpoint("mobile")}) {
@@ -69,6 +70,8 @@ export const Header = () => {
   //   window.addEventListener("resize", handleResize);
   //   return () => window.removeEventListener("resize", handleResize);
   // }, []);
+
+export const Header = () => {
   return (
     <div>
       <HeaderWrapper>
