@@ -6,4 +6,6 @@ export const Routes = {
   users: "/dashboard/users",
   settings: "/dashboard/settings",
   documentation: "/pages/documentation",
+  pricing: "/pages/pricing",
+  products: "/pages/products",
 };

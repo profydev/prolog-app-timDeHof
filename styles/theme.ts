@@ -154,8 +154,8 @@ export const theme = {
     footerHeight: "3.75rem",
   },
   breakpoint: {
-    desktop: "64em",
-    mobile: "28.125em",
+    desktop: "64rem",
+    mobile: "28.125rem",
   },
   zIndex: {
     header: 1000,

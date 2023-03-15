@@ -6,7 +6,7 @@ import { color, space } from "@styles/theme";
 type MenuItemProps = {
   text: string;
   iconSrc: string;
-  href: string;
+  href: string | URL;
   isActive?: boolean;
   isCollapsed: boolean;
 };
