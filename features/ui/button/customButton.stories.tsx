@@ -9,8 +9,8 @@ export default {
   title: "UI/Button",
   component: CustomButton,
   argTypes: {
-    isDisabled: {
-      name: "isDisabled",
+    disabled: {
+      name: "disabled",
       description: "disable the button",
       defaultValue: false,
       control: {
@@ -62,7 +62,7 @@ const Template: ComponentStory<typeof CustomButton> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   children: "Button CTA",
-  isDisabled: false,
+  disabled: false,
   onClick: action("clicked"),
 };
 
@@ -108,7 +108,7 @@ const childIcon = () => (
 );
 IconOnly.args = {
   children: childIcon(),
-  isDisabled: false,
+  disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
 };
@@ -122,7 +122,7 @@ const childLeadingIcon = () => (
 );
 LeadingIcon.args = {
   children: childLeadingIcon(),
-  isDisabled: false,
+  disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
 };
@@ -136,7 +136,7 @@ const childTrailingIcon = () => (
 );
 TrailingIcon.args = {
   children: childTrailingIcon(),
-  isDisabled: false,
+  disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
 };

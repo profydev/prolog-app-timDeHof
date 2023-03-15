@@ -44,18 +44,31 @@ const LinkList = styled(List)`
 
 const DashboardButton = styled(CustomButton)`
   display: block;
-  @media (max-width: ${breakpoint("mobile")}) {
+  @media screen (max-width: ${breakpoint("mobile")}) {
     display: none;
   }
 `;
 
 const HamburgerButton = styled(CustomButton)`
   display: none;
-  @media (max-width: ${breakpoint("mobile")}) {
+  @media screen (max-width: ${breakpoint("mobile")}) {
     display: block;
   }
 `;
 export const Header = () => {
+  // const [isMobile, setMobile] = useState(false);
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     if (window.innerWidth >= 1024) {
+  //       setMobile(true);
+  //     } else {
+  //       setMobile(false);
+  //     }
+  //   };
+
+  //   window.addEventListener("resize", handleResize);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
   return (
     <div>
       <HeaderWrapper>
@@ -70,6 +83,7 @@ export const Header = () => {
             <HeaderItemLink data-cy="header-link" key={index} {...item} />
           ))}
         </LinkList>
+
         <DashboardButton
           data-cy="dashboard-button"
           href={Routes.projects}
@@ -77,6 +91,7 @@ export const Header = () => {
           color={ButtonColor.primary}
           text="Open Dashboard"
         />
+
         <HamburgerButton
           data-cy="hamburger-button"
           href={Routes.projects}

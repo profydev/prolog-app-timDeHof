@@ -32,28 +32,28 @@ type ButtonProps = {
   size: ButtonSize;
   href?: string;
   color: ButtonColor;
-  isDisabled?: boolean;
+  disabled?: boolean;
   iconLocation?: ButtonIcon;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const containerStyles = css`
   border-radius: 8px;
-  /* display: flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem; */
+  gap: 0.5rem;
 `;
 
 const StyledButton = styled(Button)<{
   size: ButtonSize;
   color: ButtonColor;
-  isDisabled: boolean;
+  disabled: boolean;
 }>`
   ${containerStyles}
 
   ${(props) => {
     return css`
-      cursor: ${props.isDisabled ? "not-allowed" : "pointer"};
+      cursor: ${props.disabled ? "not-allowed" : "pointer"};
     `;
   }}
 
@@ -89,11 +89,11 @@ const StyledButton = styled(Button)<{
     switch (props.color) {
       case ButtonColor.primary:
         return css`
-          background: ${props.isDisabled
+          background: ${props.disabled
             ? color("primary", 200)
             : color("primary", 600)};
           border: 1px solid
-            ${props.isDisabled ? color("primary", 200) : color("primary", 600)};
+            ${props.disabled ? color("primary", 200) : color("primary", 600)};
           color: #fff;
 
           &:hover {
@@ -108,12 +108,12 @@ const StyledButton = styled(Button)<{
         `;
       case ButtonColor.secondary:
         return css`
-          background: ${props.isDisabled
+          background: ${props.disabled
             ? color("primary", 25)
             : color("primary", 50)};
           border: 1px solid
-            ${props.isDisabled ? color("primary", 25) : color("primary", 50)};
-          color: ${props.isDisabled
+            ${props.disabled ? color("primary", 25) : color("primary", 50)};
+          color: ${props.disabled
             ? color("primary", 300)
             : color("primary", 700)};
 
@@ -131,8 +131,8 @@ const StyledButton = styled(Button)<{
         return css`
           background: #fff;
           border: 1px solid
-            ${props.isDisabled ? color("gray", 200) : color("gray", 300)};
-          color: ${props.isDisabled ? color("gray", 300) : color("gray", 700)};
+            ${props.disabled ? color("gray", 200) : color("gray", 300)};
+          color: ${props.disabled ? color("gray", 300) : color("gray", 700)};
 
           &:hover {
             background: ${color("gray", 50)};
@@ -148,9 +148,7 @@ const StyledButton = styled(Button)<{
         return css`
           background: transparent;
           border: none;
-          color: ${props.isDisabled
-            ? color("gray", 300)
-            : color("primary", 700)};
+          color: ${props.disabled ? color("gray", 300) : color("primary", 700)};
 
           &:hover {
             background: ${color("primary", 50)};
@@ -164,7 +162,7 @@ const StyledButton = styled(Button)<{
         return css`
           background: transparent;
           border: none;
-          color: ${props.isDisabled ? color("gray", 300) : color("gray", 500)};
+          color: ${props.disabled ? color("gray", 300) : color("gray", 500)};
 
           &:hover {
             background: ${color("gray", 50)};
@@ -176,11 +174,11 @@ const StyledButton = styled(Button)<{
         `;
       case ButtonColor.error:
         return css`
-          background: ${props.isDisabled
+          background: ${props.disabled
             ? color("error", 200)
             : color("error", 600)};
           border: 1px solid
-            ${props.isDisabled ? color("error", 200) : color("error", 600)};
+            ${props.disabled ? color("error", 200) : color("error", 600)};
           color: #fff;
 
           &:hover {
@@ -200,13 +198,13 @@ const StyledButton = styled(Button)<{
 const StyledLink = styled(Link)<{
   size: ButtonSize;
   color: ButtonColor;
-  isDisabled: boolean;
+  disabled: boolean;
 }>`
   ${containerStyles}
   text-decoration: none;
   ${(props) => {
     return css`
-      cursor: ${props.isDisabled ? "not-allowed" : "pointer"};
+      cursor: ${props.disabled ? "not-allowed" : "pointer"};
     `;
   }}
 
@@ -242,11 +240,11 @@ const StyledLink = styled(Link)<{
     switch (props.color) {
       case ButtonColor.primary:
         return css`
-          background: ${props.isDisabled
+          background: ${props.disabled
             ? color("primary", 200)
             : color("primary", 600)};
           border: 1px solid
-            ${props.isDisabled ? color("primary", 200) : color("primary", 600)};
+            ${props.disabled ? color("primary", 200) : color("primary", 600)};
           color: #fff;
 
           &:hover {
@@ -261,12 +259,12 @@ const StyledLink = styled(Link)<{
         `;
       case ButtonColor.secondary:
         return css`
-          background: ${props.isDisabled
+          background: ${props.disabled
             ? color("primary", 25)
             : color("primary", 50)};
           border: 1px solid
-            ${props.isDisabled ? color("primary", 25) : color("primary", 50)};
-          color: ${props.isDisabled
+            ${props.disabled ? color("primary", 25) : color("primary", 50)};
+          color: ${props.disabled
             ? color("primary", 300)
             : color("primary", 700)};
 
@@ -284,8 +282,8 @@ const StyledLink = styled(Link)<{
         return css`
           background: #fff;
           border: 1px solid
-            ${props.isDisabled ? color("gray", 200) : color("gray", 300)};
-          color: ${props.isDisabled ? color("gray", 300) : color("gray", 700)};
+            ${props.disabled ? color("gray", 200) : color("gray", 300)};
+          color: ${props.disabled ? color("gray", 300) : color("gray", 700)};
 
           &:hover {
             background: ${color("gray", 50)};
@@ -301,9 +299,7 @@ const StyledLink = styled(Link)<{
         return css`
           background: transparent;
           border: none;
-          color: ${props.isDisabled
-            ? color("gray", 300)
-            : color("primary", 700)};
+          color: ${props.disabled ? color("gray", 300) : color("primary", 700)};
 
           &:hover {
             background: ${color("primary", 50)};
@@ -317,7 +313,7 @@ const StyledLink = styled(Link)<{
         return css`
           background: transparent;
           border: none;
-          color: ${props.isDisabled ? color("gray", 300) : color("gray", 500)};
+          color: ${props.disabled ? color("gray", 300) : color("gray", 500)};
 
           &:hover {
             background: ${color("gray", 50)};
@@ -329,11 +325,11 @@ const StyledLink = styled(Link)<{
         `;
       case ButtonColor.error:
         return css`
-          background: ${props.isDisabled
+          background: ${props.disabled
             ? color("error", 200)
             : color("error", 600)};
           border: 1px solid
-            ${props.isDisabled ? color("error", 200) : color("error", 600)};
+            ${props.disabled ? color("error", 200) : color("error", 600)};
           color: #fff;
 
           &:hover {
@@ -362,21 +358,16 @@ export const CustomButton: FC<ButtonProps> = ({
   size = ButtonSize.md,
   iconSrc,
   href,
-  isDisabled = false,
+  disabled = false,
   color = ButtonColor.primary,
   ...OtherProps
 }) =>
   href ? (
-    <StyledLink isDisabled={isDisabled} size={size} color={color} href={href}>
+    <StyledLink disabled={disabled} size={size} color={color} href={href}>
       {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
     </StyledLink>
   ) : (
-    <StyledButton
-      isDisabled={isDisabled}
-      size={size}
-      color={color}
-      {...OtherProps}
-    >
+    <StyledButton disabled={disabled} size={size} color={color} {...OtherProps}>
       {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
     </StyledButton>
   );
