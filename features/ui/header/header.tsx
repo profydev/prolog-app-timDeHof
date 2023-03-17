@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { Routes } from "@config/routes";
 import { HeaderItemLink } from "./header-item-link";
 import { breakpoint } from "@styles/theme";
+import { useWindowSize } from "react-use";
 import {
   CustomButton,
   ButtonSize,
   ButtonColor,
 } from "@features/ui/button/customButton";
-
 const headerItems = [
   { text: "Home", href: Routes.home },
   { text: "Products", href: Routes.products },
@@ -56,19 +56,8 @@ const HamburgerButton = styled(CustomButton)`
   }
 `;
 export const Header = () => {
-  // const [isMobile, setMobile] = useState(false);
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth >= 1024) {
-  //       setMobile(true);
-  //     } else {
-  //       setMobile(false);
-  //     }
-  //   };
+  const { width } = useWindowSize();
 
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
   return (
     <div>
       <HeaderWrapper>
@@ -83,22 +72,23 @@ export const Header = () => {
             <HeaderItemLink data-cy="header-link" key={index} {...item} />
           ))}
         </LinkList>
-
-        <DashboardButton
-          data-cy="dashboard-button"
-          href={Routes.projects}
-          size={ButtonSize.sm}
-          color={ButtonColor.primary}
-          text="Open Dashboard"
-        />
-
-        <HamburgerButton
-          data-cy="hamburger-button"
-          href={Routes.projects}
-          size={ButtonSize.lg}
-          color={ButtonColor.empty}
-          iconSrc="/icons/hamburger.svg"
-        />
+        {width <= 1024 ? (
+          <HamburgerButton
+            data-cy="hamburger-button"
+            href={Routes.projects}
+            size={ButtonSize.lg}
+            color={ButtonColor.empty}
+            iconSrc="/icons/hamburger.svg"
+          />
+        ) : (
+          <DashboardButton
+            data-cy="dashboard-button"
+            href={Routes.projects}
+            size={ButtonSize.sm}
+            color={ButtonColor.primary}
+            text="Open Dashboard"
+          />
+        )}
       </HeaderWrapper>
     </div>
   );
