@@ -27,7 +27,7 @@
 //
 // -- This will "get" data-cy attributes more easily
 Cypress.Commands.add("getByData", (selector) => {
-  return cy.get(`[data-cy=${selector}]`);
+  return cy.get(`[data-cy="${selector}"]`);
 });
 
 Cypress.Commands.add("getBySel", (selector, ...args) => {
