@@ -81,7 +81,7 @@ export const Header = () => {
   return (
     <div>
       <HeaderWrapper>
-        <Logo src={"/icons/logo-large.svg"} alt="logo" />
+        <Logo data-cy="test-logo" src={"/icons/logo-large.svg"} alt="logo" />
         <LinkList>
           {headerItems.map((item, index) => (
             <HeaderItemLink data-cy="header-link" key={index} {...item} />
