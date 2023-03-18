@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Routes } from "@config/routes";
 import { HeaderItemLink } from "./header-item-link";
@@ -57,7 +57,18 @@ const HamburgerButton = styled(CustomButton)`
 `;
 export const Header = () => {
   const { width } = useWindowSize();
-
+  const [onMobile, setMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      if (width <= 1024) {
+        setMobile(true);
+      } else if (width >= 1024) {
+        setMobile(false);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [width]);
   return (
     <div>
       <HeaderWrapper>
@@ -72,7 +83,7 @@ export const Header = () => {
             <HeaderItemLink data-cy="header-link" key={index} {...item} />
           ))}
         </LinkList>
-        {width <= 1024 ? (
+        {onMobile ? (
           <HamburgerButton
             data-cy="hamburger-button"
             href={Routes.projects}
