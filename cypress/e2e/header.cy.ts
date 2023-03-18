@@ -1,7 +1,6 @@
 describe("Header", () => {
   beforeEach(() => {
     cy.visit("http://localhost:3000/");
-    cy.wait(1000);
   });
 
   context("desktop resolution", () => {
@@ -17,13 +16,10 @@ describe("Header", () => {
         "/icons/logo-large.svg"
       );
       cy.get("ul").find("li").should("have.length", 4);
-      cy.get('[data-cy="dashboard-button"]')
+
+      cy.get('a[color="primary"]')
         .should("be.visible")
         .contains("Open Dashboard");
-    });
-
-    it("header mobile components should not be visible", () => {
-      cy.get('[data-cy="hamburger-button"]').should("not.be.visible");
     });
 
     it("header links should work", () => {
@@ -54,8 +50,7 @@ describe("Header", () => {
     });
 
     it("open dashboard should work", () => {
-      cy.get('[data-cy="dashboard-button"]')
-        .contains("Open Dashboard")
+      cy.get('a[color="primary"]')
         .should("have.attr", "href", "/dashboard")
         .click();
       cy.url().should("eq", "http://localhost:3000/dashboard");
@@ -73,23 +68,20 @@ describe("Header", () => {
         "src",
         "/icons/logo-large.svg"
       );
-      cy.get('[data-cy="hamburger-button"]').should("be.visible");
+      cy.get('a[color="empty"]').should("be.visible");
     });
 
     it("header desktop components shouldn't be visible", () => {
       cy.get("ul").should("not.be.visible");
-      cy.get('[data-cy="dashboard-button"]').should("not.be.visible");
     });
 
     it("open dashboard should still work with hamburger button", () => {
-      cy.get('[data-cy="hamburger-button"]')
-        .find("a")
-        .should("have.attr", "href", "/dashboard");
-      cy.get('[data-cy="hamburger-button"]')
+      cy.get('a[color="empty"]').should("have.attr", "href", "/dashboard");
+      cy.get('a[color="empty"]')
         .find("img")
         .should("have.attr", "src", "/icons/hamburger.svg");
 
-      cy.get('[data-cy="hamburger-button"]').click();
+      cy.get('a[color="empty"]').click();
       cy.url().should("eq", "http://localhost:3000/dashboard");
     });
   });

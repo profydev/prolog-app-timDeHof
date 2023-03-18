@@ -57,18 +57,15 @@ const HamburgerButton = styled(CustomButton)`
 `;
 export const Header = () => {
   const { width } = useWindowSize();
-  const [onMobile, setMobile] = useState(false);
+  const breakpoint = 1024;
+  const onMobile = typeof window !== "undefined" && width <= breakpoint;
+  const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
-    const handleResize = () => {
-      if (width <= 1024) {
-        setMobile(true);
-      } else if (width >= 1024) {
-        setMobile(false);
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [width]);
+    setHasMounted(true);
+  }, []);
+  if (!hasMounted) {
+    return null;
+  }
   return (
     <div>
       <HeaderWrapper>
@@ -85,7 +82,7 @@ export const Header = () => {
         </LinkList>
         {onMobile ? (
           <HamburgerButton
-            data-cy="hamburger-button"
+            data-test="hamburger-button"
             href={Routes.projects}
             size={ButtonSize.lg}
             color={ButtonColor.empty}
@@ -93,7 +90,7 @@ export const Header = () => {
           />
         ) : (
           <DashboardButton
-            data-cy="dashboard-button"
+            data-test="dashboard-button"
             href={Routes.projects}
             size={ButtonSize.sm}
             color={ButtonColor.primary}
