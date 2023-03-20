@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Routes } from "@config/routes";
 import { HeaderItemLink } from "./header-item-link";
-import { breakpoint } from "@styles/theme";
+import { space, breakpoint } from "@styles/theme";
 import {
   CustomButton,
   ButtonSize,
@@ -25,6 +25,14 @@ const HeaderWrapper = styled.header`
   justify-content: space-between;
   align-items: center;
   background: white;
+`;
+
+const Logo = styled.img`
+  width: 7.375rem;
+
+  @media (min-width: ${breakpoint("desktop")}) {
+    margin: ${space(0, 4)};
+  }
 `;
 
 const List = styled.ul`
@@ -59,12 +67,7 @@ export const Header = () => {
   return (
     <>
       <HeaderWrapper>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          data-cy="test-logo"
-          src="/icons/logo-large.svg"
-          alt="Prolog logo"
-        />
+        <Logo data-cy="test-logo" src={"/icons/logo-large.svg"} alt="logo" />
         <LinkList>
           {headerItems.map((item, index) => (
             <HeaderItemLink data-cy="header-link" key={index} {...item} />
