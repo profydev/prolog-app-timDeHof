@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { Routes } from "@config/routes";
 import { HeaderItemLink } from "./header-item-link";
 import { space, breakpoint } from "@styles/theme";
-import { useWindowSize } from "react-use";
 import {
   CustomButton,
   ButtonSize,
   ButtonColor,
 } from "@features/ui/button/customButton";
 
-import { getProjects } from "@api/projects";
-import { queryClient } from "@api/query-client";
 const headerItems = [
   { text: "Home", href: Routes.home },
   { text: "Products", href: Routes.products },
@@ -55,31 +52,20 @@ const LinkList = styled(List)`
 
 const DashboardButton = styled(CustomButton)`
   display: block;
-  @media screen (max-width: ${breakpoint("mobile")}) {
+  @media (max-width: ${breakpoint("mobile")}) {
     display: none;
   }
 `;
 
 const HamburgerButton = styled(CustomButton)`
   display: none;
-  @media screen (max-width: ${breakpoint("mobile")}) {
+  @media (max-width: ${breakpoint("mobile")}) {
     display: block;
   }
 `;
 export const Header = () => {
-  const { width } = useWindowSize();
-  const breakpoint = 1024;
-  const onMobile = typeof window !== "undefined" && width <= breakpoint;
-  const [hasMounted, setHasMounted] = useState(false);
-  useEffect(() => {
-    queryClient.prefetchQuery(["projects"], getProjects);
-    setHasMounted(true);
-  }, []);
-  if (!hasMounted) {
-    return null;
-  }
   return (
-    <div>
+    <>
       <HeaderWrapper>
         <Logo data-cy="test-logo" src={"/icons/logo-large.svg"} alt="logo" />
         <LinkList>
@@ -87,24 +73,25 @@ export const Header = () => {
             <HeaderItemLink data-cy="header-link" key={index} {...item} />
           ))}
         </LinkList>
-        {onMobile ? (
-          <HamburgerButton
-            data-test="hamburger-button"
-            href={Routes.projects}
-            size={ButtonSize.lg}
-            color={ButtonColor.empty}
-            iconSrc="/icons/hamburger.svg"
-          />
-        ) : (
-          <DashboardButton
-            data-test="dashboard-button"
-            href={Routes.projects}
-            size={ButtonSize.sm}
-            color={ButtonColor.primary}
-            text="Open Dashboard"
-          />
-        )}
+
+        <DashboardButton
+          data-cy="dashboard-button"
+          className="dashboardButton"
+          href={Routes.projects}
+          size={ButtonSize.sm}
+          color={ButtonColor.primary}
+          text="Open Dashboard"
+        />
+
+        <HamburgerButton
+          data-cy="hamburger-button"
+          className="hamburgerButton"
+          href={Routes.projects}
+          size={ButtonSize.lg}
+          color={ButtonColor.empty}
+          iconSrc="/icons/hamburger.svg"
+        />
       </HeaderWrapper>
-    </div>
+    </>
   );
 };
