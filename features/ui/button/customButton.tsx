@@ -1,8 +1,9 @@
-import React, { FC, ButtonHTMLAttributes } from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 import { color, textFont, space } from "@styles/theme";
 import { Button } from "./button";
 import Link from "next/link";
+
 export enum ButtonSize {
   sm = "sm",
   md = "md",
@@ -27,6 +28,7 @@ export enum ButtonIcon {
 }
 
 type ButtonProps = {
+  className?: string;
   iconSrc?: string;
   text?: string;
   size: ButtonSize;
@@ -353,21 +355,40 @@ const Text = styled.p`
   margin: 0;
   ${textFont("md", "medium")}
 `;
-export const CustomButton: FC<ButtonProps> = ({
+
+export function CustomButton({
   text,
   size = ButtonSize.md,
   iconSrc,
   href,
+  className,
   disabled = false,
   color = ButtonColor.primary,
   ...OtherProps
-}) =>
-  href ? (
-    <StyledLink disabled={disabled} size={size} color={color} href={href}>
-      {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
-    </StyledLink>
-  ) : (
-    <StyledButton disabled={disabled} size={size} color={color} {...OtherProps}>
-      {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
-    </StyledButton>
+}: ButtonProps) {
+  return (
+    <>
+      {href ? (
+        <StyledLink
+          disabled={disabled}
+          className={className}
+          size={size}
+          color={color}
+          href={href}
+        >
+          {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
+        </StyledLink>
+      ) : (
+        <StyledButton
+          disabled={disabled}
+          className={className}
+          size={size}
+          color={color}
+          {...OtherProps}
+        >
+          {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
+        </StyledButton>
+      )}
+    </>
   );
+}

@@ -44,33 +44,20 @@ const LinkList = styled(List)`
 
 const DashboardButton = styled(CustomButton)`
   display: block;
-  @media screen (max-width: ${breakpoint("mobile")}) {
+  @media (max-width: ${breakpoint("mobile")}) {
     display: none;
   }
 `;
 
 const HamburgerButton = styled(CustomButton)`
   display: none;
-  @media screen (max-width: ${breakpoint("mobile")}) {
+  @media (max-width: ${breakpoint("mobile")}) {
     display: block;
   }
 `;
 export const Header = () => {
-  // const [isMobile, setMobile] = useState(false);
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth >= 1024) {
-  //       setMobile(true);
-  //     } else {
-  //       setMobile(false);
-  //     }
-  //   };
-
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // }, []);
   return (
-    <div>
+    <>
       <HeaderWrapper>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -100,6 +87,6 @@ export const Header = () => {
           iconSrc="/icons/hamburger.svg"
         />
       </HeaderWrapper>
-    </div>
+    </>
   );
 };
