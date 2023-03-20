@@ -73,6 +73,7 @@ export const Header = () => {
 
         <DashboardButton
           data-cy="dashboard-button"
+          className="dashboardButton"
           href={Routes.projects}
           size={ButtonSize.sm}
           color={ButtonColor.primary}
@@ -81,6 +82,7 @@ export const Header = () => {
 
         <HamburgerButton
           data-cy="hamburger-button"
+          className="hamburgerButton"
           href={Routes.projects}
           size={ButtonSize.lg}
           color={ButtonColor.empty}

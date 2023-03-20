@@ -28,7 +28,7 @@ export enum ButtonIcon {
 }
 
 type ButtonProps = {
-  className?: string;
+  className: string;
   iconSrc?: string;
   text?: string;
   size: ButtonSize;
