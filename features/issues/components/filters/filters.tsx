@@ -11,6 +11,7 @@ import { Option } from "@features/ui/select/option";
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: row;
+  /* align-items: center; */
   justify-content: flex-end;
   gap: 3rem;
   margin-bottom: 25px;

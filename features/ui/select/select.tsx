@@ -27,8 +27,8 @@ export type SelectProps = {
 
 const SelectContainer = styled.div`
   position: relative;
-  display: block;
-  min-width: 160px;
+  display: flex;
+  min-width: 360px;
   width: calc(5rem * 4);
   @media (max-width: ${breakpoint("desktop")}) {
     align-self: stretch;
@@ -70,7 +70,6 @@ const CustomSelect = styled.div<{
   icon: string;
 }>`
   ${textFont("md", "medium")}
-  z-index: 100;
   position: absolute;
   top: 0;
   left: 0;
