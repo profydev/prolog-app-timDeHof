@@ -11,12 +11,14 @@ import { Option } from "@features/ui/select/option";
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: row;
-  /* align-items: center; */
+  flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 3rem;
+  gap: 1rem;
   margin-bottom: 25px;
   @media (max-width: ${breakpoint("desktop")}) {
-    flex-direction: column;
+    & div {
+      flex: 1;
+    }
   }
 `;
 function getStatusDefaultValue(filters: IssueFilters) {

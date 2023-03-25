@@ -25,9 +25,9 @@ const InputContainer = styled.div`
 
 const Label = styled.label`
   display: block;
-  margin-bottom: 6px;
   color: ${color("gray", 700)};
   ${textFont("sm", "regular")};
+  margin-bottom: 6px;
 `;
 
 const CustomInput = styled.input<{
@@ -35,11 +35,11 @@ const CustomInput = styled.input<{
   setError?: boolean;
   errorMsg: string;
 }>`
-  ${textFont("md", "medium")}
   width: 100%;
+  ${textFont("md", "medium")}
   border-radius: 0.5rem;
   padding: 10px 14px;
-  gap: 0.5rem;
+  color: ${color("gray", 900)};
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   ${(props) =>
     css`
