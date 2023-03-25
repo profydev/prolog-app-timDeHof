@@ -76,11 +76,6 @@ const CustomSelect = styled.div<{
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   display: flex;
   justify-content: space-between;
-  span {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
 
   ${(props) => {
     if (props.icon)
