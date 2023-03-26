@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { useClickAway } from "react-use";
 import styled, { css } from "styled-components";
-import { color, textFont, breakpoint } from "@styles/theme";
+import { color, textFont } from "@styles/theme";
 import { SelectContext } from "./select-context";
 
 export type SelectProps = {
@@ -27,12 +27,8 @@ export type SelectProps = {
 
 const SelectContainer = styled.div`
   position: relative;
-  display: block;
+  display: flex;
   min-width: 160px;
-  width: calc(5rem * 4);
-  @media (max-width: ${breakpoint("desktop")}) {
-    align-self: stretch;
-  }
 `;
 
 const SelectLabel = styled.p`
@@ -70,10 +66,6 @@ const CustomSelect = styled.div<{
   icon: string;
 }>`
   ${textFont("md", "medium")}
-  z-index: 100;
-  position: absolute;
-  top: 0;
-  left: 0;
   display: none;
   width: 100%;
   border-radius: 8px;
@@ -84,6 +76,7 @@ const CustomSelect = styled.div<{
   box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
   display: flex;
   justify-content: space-between;
+
   ${(props) => {
     if (props.icon)
       return css`
@@ -92,7 +85,7 @@ const CustomSelect = styled.div<{
   }}
   ${(props) =>
     css`
-      color: ${props.disabled ? color("gray", 500) : color("gray", 900)};
+      color: ${props.disabled && color("gray", 500)};
       background-color: ${props.disabled ? color("gray", 50) : "white"};
     `};
   ${(props) =>
@@ -105,10 +98,6 @@ const CustomSelect = styled.div<{
       display: block;
     }
   }
-`;
-
-const Placeholder = styled.div`
-  color: ${color("gray", 500)};
 `;
 
 const Icon = styled.img<{
@@ -200,11 +189,8 @@ export const Select = ({
           icon={icon}
         >
           {icon && <OptionalIcon src={icon} />}
-          {selectedOption ? (
-            titleCase(selectedOption)
-          ) : (
-            <Placeholder>{placeholder}</Placeholder>
-          )}
+
+          {selectedOption ? titleCase(selectedOption) : placeholder}
           <Icon
             src={"/icons/chevron-down.svg"}
             alt="chevron-down"

@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import capitalize from "lodash/capitalize";
-import { color, space, textFont } from "@styles/theme";
+import { color, space, textFont, breakpoint } from "@styles/theme";
 import { Badge, BadgeColor, BadgeSize } from "@features/ui";
 import { ProjectLanguage } from "@api/projects.types";
 import { IssueLevel } from "@api/issues.types";
 import type { Issue } from "@api/issues.types";
+import { tableLabels } from "./issue-list";
 
 type IssueRowProps = {
   projectLanguage: ProjectLanguage;
@@ -36,7 +37,9 @@ const IssueCell = styled(Cell)`
 
 const LanguageIcon = styled.img`
   width: ${space(10)};
-  margin-right: ${space(3)};
+  @media (min-width: ${breakpoint("mobile")}) {
+    margin-right: ${space(3)};
+  }
 `;
 
 const ErrorTypeAndMessage = styled.div`
@@ -66,13 +69,13 @@ export function IssueRow({ projectLanguage, issue }: IssueRowProps) {
           <div>{firstLineOfStackTrace}</div>
         </div>
       </IssueCell>
-      <Cell>
+      <Cell data-label={tableLabels[1]}>
         <Badge color={levelColors[level]} size={BadgeSize.sm}>
           {capitalize(level)}
         </Badge>
       </Cell>
-      <Cell>{numEvents}</Cell>
-      <Cell>{numUsers}</Cell>
+      <Cell data-label={tableLabels[2]}>{numEvents}</Cell>
+      <Cell data-label={tableLabels[3]}>{numUsers}</Cell>
     </Row>
   );
 }
