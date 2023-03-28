@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { Header } from "@features/ui/header";
-
+import { HeroSection } from "@feature/ui/hero-section";
+import { SocialProofSection } from "@features/ui/social-proof-section";
+import { GetServerSideProps } from "next";
+import { TLandingPage } from "@Typings/landingPages.types";
 const ContactButton = styled.button`
   position: absolute;
   bottom: 2.5rem;
@@ -21,6 +24,8 @@ const IssuesPage = () => {
   return (
     <div>
       <Header />
+      <HeroSection />
+      <SocialProofSection />
       <ContactButton
         onClick={() =>
           alert(
@@ -36,3 +41,16 @@ const IssuesPage = () => {
 };
 
 export default IssuesPage;
+
+export const getServerSideProps: GetServerSideProps<{
+  data: TLandingPage,
+}> = async (context) => {
+  const res = await fetch("https://prolog-api.profy.dev/content-page/home");
+  const data: TLandingPage = await res.json();
+
+  return {
+    props: {
+      data,
+    },
+  };
+};
