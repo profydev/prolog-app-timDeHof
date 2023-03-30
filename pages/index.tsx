@@ -2,6 +2,7 @@ import Head from "next/head";
 import styled from "styled-components";
 import { Header } from "@features/ui/header";
 import { HeroSection } from "@features/ui/hero-section";
+import { SocialProofSection } from "@features/ui/social-proof-section";
 import {
   SectionHero,
   SectionSocialProof,
@@ -9,10 +10,11 @@ import {
   SectionTypes,
   TLandingPage,
 } from "@typings/landingPages.types";
+
 const ContactButton = styled.button`
-  position: absolute;
-  bottom: 2.5rem;
-  right: 2.5rem;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
   padding: 1rem;
   background: #7f56d9;
   border-radius: 50%;
@@ -31,7 +33,9 @@ const IssuesPage = ({ data }: { data: TLandingPage }) => {
   const hero = data.sections.find(
     (section) => section.sectionType === SectionTypes.hero
   ) as SectionHero;
-
+  const socialProof = data.sections.find(
+    (section) => section.sectionType === SectionTypes.socialProof
+  ) as SectionSocialProof;
   return (
     <PageWrapper>
       <Head>
@@ -45,17 +49,20 @@ const IssuesPage = ({ data }: { data: TLandingPage }) => {
         />
       </Head>
       <Header />
-      <Main>{hero && <HeroSection data={hero} />}</Main>
-      <ContactButton
-        onClick={() =>
-          alert(
-            "Implement this in Challenge 2 - Modal:\n\nhttps://profy.dev/rjs-challenge-modal"
-          )
-        }
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/icons/message.svg" alt="Contact" />
-      </ContactButton>
+      <Main>
+        {hero && <HeroSection data={hero} />}
+        {socialProof && <SocialProofSection data={socialProof} />}
+        <ContactButton
+          onClick={() =>
+            alert(
+              "Implement this in Challenge 2 - Modal:\n\nhttps://profy.dev/rjs-challenge-modal"
+            )
+          }
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icons/message.svg" alt="Contact" />
+        </ContactButton>
+      </Main>
     </PageWrapper>
   );
 };

@@ -16,6 +16,7 @@ const Hero = styled.section<{ bgTheme: BackgroundTheme }>`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 96px 0;
   & h1 {
     color: ${color("gray", 900)};
     font-size: 3.75rem;
@@ -37,12 +38,16 @@ const Hero = styled.section<{ bgTheme: BackgroundTheme }>`
   }
   & img {
     width: 100%;
+    max-width: 768px;
     height: auto;
   }
 
   @media (min-width: ${breakpoint("desktop")}) {
     & p {
       white-space: pre;
+    }
+    & img {
+      margin: 0 auto;
     }
   }
 `;
