@@ -62,7 +62,7 @@ const IssuesPage = ({ data }: { data: TLandingPage }) => {
 
 export default IssuesPage;
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const res = await fetch(`https://prolog-api.profy.dev/content-page/home`);
   const data = await res.json();
   return { props: { data } };
