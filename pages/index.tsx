@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Header } from "@features/ui/header";
 import { HeroSection } from "@features/ui/hero-section";
 import { SocialProofSection } from "@features/ui/social-proof-section";
+import { TestimonialsSection } from "@features/ui/testimonials-section";
 import {
   SectionHero,
   SectionSocialProof,
@@ -36,6 +37,9 @@ const IssuesPage = ({ data }: { data: TLandingPage }) => {
   const socialProof = data.sections.find(
     (section) => section.sectionType === SectionTypes.socialProof
   ) as SectionSocialProof;
+  const testimonials = data.sections.find(
+    (section) => section.sectionType === SectionTypes.testimonials
+  ) as SectionTestimonials;
   return (
     <PageWrapper>
       <Head>
@@ -52,6 +56,7 @@ const IssuesPage = ({ data }: { data: TLandingPage }) => {
       <Main>
         {hero && <HeroSection data={hero} />}
         {socialProof && <SocialProofSection data={socialProof} />}
+        {testimonials && <TestimonialsSection data={testimonials} />}
         <ContactButton
           onClick={() =>
             alert(
