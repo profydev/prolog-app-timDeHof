@@ -12,7 +12,7 @@ export enum SectionTypes {
   socialProof = "social-proof",
   testimonials = "testimonials",
 }
-export type BackgroundTheme = "light-gray";
+export type BackgroundTheme = "light-gray" | "light";
 export type Section = SectionHero | SectionSocialProof | SectionTestimonials;
 
 export type SectionHero = {

@@ -16,48 +16,49 @@ const Hero = styled.section<{ bgTheme: BackgroundTheme }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 96px 0;
-  & h1 {
-    color: ${color("gray", 900)};
-    font-size: 3.75rem;
-    font-family: "Inter";
-    font-weight: 600;
-    font-style: normal;
-    line-height: 4.5rem;
-    text-align: center;
-    letter-spacing: -0.02em;
-  }
-  & p {
-    color: ${color("gray", 500)};
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.25rem;
-    line-height: 1.875rem;
-    text-align: center;
-  }
+  gap: 64px;
   & img {
-    width: 100%;
-    max-width: 768px;
+    max-width: 100%;
     height: auto;
   }
+`;
+const Context = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 96px 112px 0 112px;
+  gap: 24px;
+`;
 
+const Title = styled.h1`
+  color: ${color("gray", 900)};
+  font-size: clamp(36px, 29px + 2.15vw, 60px);
+  letter-spacing: -0.02em;
+  text-align: center;
+  margin: 0;
+`;
+const Subtitle = styled.p`
+    color: ${color("gray", 500)};
+    margin: 0;
+    font-size:clamp(18px, 19px, 20px);
+    line-height: 1.875rem;
+    text-align: center;
   @media (min-width: ${breakpoint("desktop")}) {
-    & p {
+    {
       white-space: pre;
     }
-    & img {
-      margin: 0 auto;
-    }
-  }
 `;
 
 export const HeroSection = ({ data }: { data: SectionHero }) => {
   const { title, subtitle, image, theme } = data;
+
   return (
     <Hero bgTheme={theme}>
-      <h1>{title}</h1>
-      <p>{subtitle}</p>
+      <Context>
+        <Title>{title}</Title>
+        <Subtitle>{subtitle}</Subtitle>
+      </Context>
       <Image
         src={`https://prolog-api.profy.dev${image.src}`}
         width={image.width}
