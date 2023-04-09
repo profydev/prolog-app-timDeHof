@@ -12,6 +12,8 @@ const SocialProof = styled.section<{ bgTheme: BackgroundTheme }>`
     switch (bgTheme) {
       case "light-gray":
         return color("gray", 50);
+      case "light":
+        return "#fff";
       default:
         return "#fff";
     }
@@ -19,16 +21,13 @@ const SocialProof = styled.section<{ bgTheme: BackgroundTheme }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0px 32px 96px;
-  gap: 32px;
-
+  padding: 96px 0;
   & p {
-    font-family: "Inter";
-    font-style: normal;
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 24px;
     color: ${color("gray", 500)};
+    font-size: 1rem;
+    line-height: 1.5rem;
+    margin: 0;
+    margin-bottom: 34px;
     text-align: center;
   }
 
