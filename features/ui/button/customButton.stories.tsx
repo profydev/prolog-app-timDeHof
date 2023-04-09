@@ -1,8 +1,11 @@
 import React from "react";
-
-import Image from "next/image";
 import { ComponentStory, ComponentMeta } from "@storybook/react";
-import { CustomButton, ButtonSize, ButtonColor } from "./customButton";
+import {
+  CustomButton,
+  ButtonSize,
+  ButtonColor,
+  ButtonIcon,
+} from "./customButton";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -61,7 +64,7 @@ const Template: ComponentStory<typeof CustomButton> = (args) => (
 
 export const Default = Template.bind({});
 Default.args = {
-  children: "Button CTA",
+  text: "Button CTA",
   disabled: false,
   onClick: action("clicked"),
 };
@@ -103,40 +106,31 @@ Error.args = {
 };
 
 export const IconOnly = Template.bind({});
-const childIcon = () => (
-  <Image src="/icons/close.svg" width={30} height={30} alt="Close menu" />
-);
 IconOnly.args = {
-  children: childIcon(),
+  iconSrc: "/icons/close.svg",
   disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
+  iconLocation: ButtonIcon.only,
 };
 
 export const LeadingIcon = Template.bind({});
-const childLeadingIcon = () => (
-  <>
-    <Image src="/icons/close.svg" width={30} height={30} alt="Close menu" />
-    Close menu
-  </>
-);
+
 LeadingIcon.args = {
-  children: childLeadingIcon(),
+  iconSrc: "/icons/close.svg",
+  text: "Button CTA",
   disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
+  iconLocation: ButtonIcon.leading,
 };
 
 export const TrailingIcon = Template.bind({});
-const childTrailingIcon = () => (
-  <>
-    Close menu
-    <Image src="/icons/close.svg" width={30} height={30} alt="Close menu" />
-  </>
-);
 TrailingIcon.args = {
-  children: childTrailingIcon(),
+  iconSrc: "/icons/close.svg",
+  text: "Button CTA",
   disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
+  iconLocation: ButtonIcon.trailing,
 };

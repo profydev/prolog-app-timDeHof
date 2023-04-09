@@ -29,6 +29,10 @@ module.exports = {
     config.resolve.alias["@styles"] = path.resolve("./styles");
     config.resolve.alias["@config"] = path.resolve("./config");
     config.resolve.alias["@features"] = path.resolve("./features");
+    config.resolve.alias["@typings"] = path.resolve("./typings");
+    config.resolve.alias["next/image"] = require.resolve(
+      "./__mocks__/NextJSImageMock.js"
+    );
     return config;
   },
 };

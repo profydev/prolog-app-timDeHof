@@ -155,7 +155,7 @@ export const theme = {
   },
   breakpoint: {
     desktop: "64rem",
-    mobile: "23.438rem",
+    mobile: "37.54rem",
   },
   zIndex: {
     header: 1000,
