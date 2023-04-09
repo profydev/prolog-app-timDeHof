@@ -12,6 +12,8 @@ const Testimonials = styled.section<{ bgTheme: BackgroundTheme }>`
     switch (bgTheme) {
       case "light-gray":
         return color("gray", 50);
+      case "light":
+        return "#fff";
       default:
         return "#fff";
     }

@@ -43,13 +43,14 @@ const containerStyles = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
 `;
 
 const StyledButton = styled(Button)<{
   size: ButtonSize;
   color: ButtonColor;
   disabled: boolean;
+  iconLocation: ButtonIcon;
 }>`
   ${containerStyles}
 
@@ -195,12 +196,34 @@ const StyledButton = styled(Button)<{
         `;
     }
   }}
+
+   ${(props) => {
+    switch (props.iconLocation) {
+      case ButtonIcon.only:
+        return css`
+          padding: 0;
+        `;
+      case ButtonIcon.none:
+        return css``;
+      case ButtonIcon.leading:
+        return css`
+          padding: 0 1rem 0 0;
+          flex-direction: row;
+        `;
+      case ButtonIcon.trailing:
+        return css`
+          padding: 0 0 0 1rem;
+          flex-direction: row-reverse;
+        `;
+    }
+  }}
 `;
 
 const StyledLink = styled(Link)<{
   size: ButtonSize;
   color: ButtonColor;
   disabled: boolean;
+  iconLocation: ButtonIcon;
 }>`
   ${containerStyles}
   text-decoration: none;
@@ -349,7 +372,9 @@ const StyledLink = styled(Link)<{
 `;
 
 const Icon = styled.img`
-  height: 13px;
+  margin: 0;
+  weight: 100%;
+  height: auto;
 `;
 const Text = styled.p`
   margin: 0;
@@ -364,6 +389,7 @@ export function CustomButton({
   className,
   disabled = false,
   color = ButtonColor.primary,
+  iconLocation = ButtonIcon.none,
   ...OtherProps
 }: ButtonProps) {
   return (
@@ -375,6 +401,7 @@ export function CustomButton({
           size={size}
           color={color}
           href={href}
+          iconLocation={iconLocation}
         >
           {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
         </StyledLink>
@@ -384,6 +411,7 @@ export function CustomButton({
           className={className}
           size={size}
           color={color}
+          iconLocation={iconLocation}
           {...OtherProps}
         >
           {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
