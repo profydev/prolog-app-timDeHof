@@ -52,6 +52,8 @@ describe("Header", () => {
     it("open dashboard should work", () => {
       cy.get('a[color="primary"]')
         .should("have.attr", "href", "/dashboard")
+        .find("p")
+        .contains("Open Dashboard")
         .click();
       cy.url().should("eq", "http://localhost:3000/dashboard");
     });

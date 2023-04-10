@@ -28,14 +28,14 @@ export enum ButtonIcon {
 }
 
 type ButtonProps = {
-  className: string;
+  className?: string;
   iconSrc?: string;
   text?: string;
   size: ButtonSize;
   href?: string;
   color: ButtonColor;
   disabled?: boolean;
-  iconLocation?: ButtonIcon;
+  iconlocation?: ButtonIcon;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const containerStyles = css`
@@ -44,13 +44,14 @@ const containerStyles = css`
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
+  width: fit-content;
 `;
 
 const StyledButton = styled(Button)<{
   size: ButtonSize;
   color: ButtonColor;
   disabled: boolean;
-  iconLocation: ButtonIcon;
+  iconlocation: ButtonIcon;
 }>`
   ${containerStyles}
 
@@ -78,6 +79,7 @@ const StyledButton = styled(Button)<{
         return css`
           padding: 0.625rem 1.125rem;
           ${textFont("md", "medium")};
+          width: 170px;
         `;
 
       case ButtonSize.xl:
@@ -198,7 +200,7 @@ const StyledButton = styled(Button)<{
   }}
 
    ${(props) => {
-    switch (props.iconLocation) {
+    switch (props.iconlocation) {
       case ButtonIcon.only:
         return css`
           padding: 0;
@@ -223,7 +225,7 @@ const StyledLink = styled(Link)<{
   size: ButtonSize;
   color: ButtonColor;
   disabled: boolean;
-  iconLocation: ButtonIcon;
+  iconlocation: ButtonIcon;
 }>`
   ${containerStyles}
   text-decoration: none;
@@ -369,6 +371,27 @@ const StyledLink = styled(Link)<{
         `;
     }
   }}
+
+  ${(props) => {
+    switch (props.iconlocation) {
+      case ButtonIcon.only:
+        return css`
+          padding: 0;
+        `;
+      case ButtonIcon.none:
+        return css``;
+      case ButtonIcon.leading:
+        return css`
+          padding: 0 1rem 0 0;
+          flex-direction: row;
+        `;
+      case ButtonIcon.trailing:
+        return css`
+          padding: 0 0 0 1rem;
+          flex-direction: row-reverse;
+        `;
+    }
+  }}
 `;
 
 const Icon = styled.img`
@@ -389,7 +412,7 @@ export function CustomButton({
   className,
   disabled = false,
   color = ButtonColor.primary,
-  iconLocation = ButtonIcon.none,
+  iconlocation = ButtonIcon.none,
   ...OtherProps
 }: ButtonProps) {
   return (
@@ -401,7 +424,7 @@ export function CustomButton({
           size={size}
           color={color}
           href={href}
-          iconLocation={iconLocation}
+          iconlocation={iconlocation}
         >
           {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}
         </StyledLink>
@@ -411,7 +434,7 @@ export function CustomButton({
           className={className}
           size={size}
           color={color}
-          iconLocation={iconLocation}
+          iconlocation={iconlocation}
           {...OtherProps}
         >
           {iconSrc && <Icon src={iconSrc} />} {text && <Text>{text}</Text>}

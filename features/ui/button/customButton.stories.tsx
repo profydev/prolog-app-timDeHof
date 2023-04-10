@@ -111,7 +111,7 @@ IconOnly.args = {
   disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
-  iconLocation: ButtonIcon.only,
+  iconlocation: ButtonIcon.only,
 };
 
 export const LeadingIcon = Template.bind({});
@@ -122,7 +122,7 @@ LeadingIcon.args = {
   disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
-  iconLocation: ButtonIcon.leading,
+  iconlocation: ButtonIcon.leading,
 };
 
 export const TrailingIcon = Template.bind({});
@@ -132,5 +132,5 @@ TrailingIcon.args = {
   disabled: false,
   size: ButtonSize.md,
   color: ButtonColor.primary,
-  iconLocation: ButtonIcon.trailing,
+  iconlocation: ButtonIcon.trailing,
 };

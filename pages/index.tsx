@@ -1,9 +1,11 @@
 import Head from "next/head";
+import { useState } from "react";
 import styled from "styled-components";
 import { Header } from "@features/ui/header";
 import { HeroSection } from "@features/ui/hero-section";
 import { SocialProofSection } from "@features/ui/social-proof-section";
 import { TestimonialsSection } from "@features/ui/testimonials-section";
+import { ContactModal } from "@features/ui/contact-Modal";
 import {
   SectionHero,
   SectionSocialProof,
@@ -31,6 +33,7 @@ const PageWrapper = styled.div``;
 const Main = styled.main``;
 
 const IssuesPage = ({ data }: { data: TLandingPage }) => {
+  const [showModal, setShowModal] = useState(false);
   const hero = data.sections.find(
     (section) => section.sectionType === SectionTypes.hero
   ) as SectionHero;
@@ -57,13 +60,8 @@ const IssuesPage = ({ data }: { data: TLandingPage }) => {
         {hero && <HeroSection data={hero} />}
         {socialProof && <SocialProofSection data={socialProof} />}
         {testimonials && <TestimonialsSection data={testimonials} />}
-        <ContactButton
-          onClick={() =>
-            alert(
-              "Implement this in Challenge 2 - Modal:\n\nhttps://profy.dev/rjs-challenge-modal"
-            )
-          }
-        >
+        <ContactModal showModal={showModal} setShowModal={setShowModal} />
+        <ContactButton onClick={() => setShowModal((prev) => !prev)}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icons/message.svg" alt="Contact" />
         </ContactButton>

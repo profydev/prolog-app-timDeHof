@@ -7,6 +7,7 @@ import {
   CustomButton,
   ButtonSize,
   ButtonColor,
+  ButtonIcon,
 } from "@features/ui/button/customButton";
 
 const headerItems = [
@@ -87,8 +88,9 @@ export const Header = () => {
           data-cy="hamburger-button"
           className="hamburgerButton"
           href={Routes.projects}
-          size={ButtonSize.lg}
+          size={ButtonSize.sm}
           color={ButtonColor.empty}
+          iconlocation={ButtonIcon.only}
           iconSrc="/icons/hamburger.svg"
         />
       </HeaderWrapper>
